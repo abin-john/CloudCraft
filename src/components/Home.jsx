@@ -1,23 +1,20 @@
 import NavBar from "./Navbar"
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 
 export default function Home() {
     return (
         <>
             <NavBar></NavBar>
-            <Container className="mt-5">
-                <Row>
-                    <Col>1 of 2</Col>
-                    <Col>2 of 2</Col>
-                </Row>
-                <Row>
-                    <Col>1 of 3</Col>
-                    <Col>2 of 3</Col>
-                    <Col>3 of 3</Col>
-                </Row>
-            </Container>
+            <div className="px-4 pt-5 my-5 text-center border-bottom">
+                <h1 className="display-4 fw-bold">Ops CloudCraft</h1>
+                <div className="col-lg-6 mx-auto">
+                    <p className="lead mb-4">A Web Portal for all DevOps practices, designed to collaborate effectively with DevOps teams for seamless code deployments.</p>
+                </div>
+                <div className="overflow-hidden">
+                    <div className="container px-5">
+                        <img src="/devops_loop.jpeg" className="img-fluid border rounded-3 shadow-lg mb-4" alt="DevOps Image" loading=" lazy" />
+                    </div>
+                </div>
+            </div>
         </>
     )
 }
