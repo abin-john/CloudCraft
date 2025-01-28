@@ -22,7 +22,7 @@ export default function NavBar() {
                         <Nav className="me-auto">
                             <Nav.Link href="#home">Confluence</Nav.Link>
                             <Nav.Link href="/new">Link</Nav.Link>
-                            <NavDropdown title="Dropdown" id="basic-nav-dropdown" menuVariant="dark">
+                            <NavDropdown title="GC Release Component" id="basic-nav-dropdown" menuVariant="dark">
                                 <NavDropdown.Item className="bg-dark text-white" href="#action/3.1">Action</NavDropdown.Item>
                                 <NavDropdown.Item className="bg-dark text-white" href="#action/3.2">Another action</NavDropdown.Item>
                                 <NavDropdown.Item className="bg-dark text-white" href="#action/3.3">Something</NavDropdown.Item>
