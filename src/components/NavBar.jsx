@@ -2,9 +2,18 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import { useOktaAuth } from '@okta/okta-react';
 
 
 export default function NavBar() {
+    const { authState, oktaAuth } = useOktaAuth()
+    const login = async () => oktaAuth.signInWithRedirect()
+    const logout = async () => oktaAuth.signOut()
+
+    if (!authState) {
+        return null;
+    }
+
     return (
         <>
             <Navbar expand="lg" className="bg-dark navbar-dark custom-navbar">
@@ -21,7 +30,6 @@ export default function NavBar() {
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">
                             <Nav.Link href="#home">Confluence</Nav.Link>
-                            <Nav.Link href="/new">Link</Nav.Link>
                             <NavDropdown title="GC Release Component" id="basic-nav-dropdown" menuVariant="dark">
                                 <NavDropdown.Item className="bg-dark text-white" href="#action/3.1">Action</NavDropdown.Item>
                                 <NavDropdown.Item className="bg-dark text-white" href="#action/3.2">Another action</NavDropdown.Item>
@@ -29,6 +37,15 @@ export default function NavBar() {
                                 <NavDropdown.Divider />
                                 <NavDropdown.Item className="bg-dark text-white" href="#action/3.4">Separated link</NavDropdown.Item>
                             </NavDropdown>
+                            {authState.isAuthenticated && (
+                                <Nav.Link href="/new">Link</Nav.Link>
+                            )}
+                            {authState.isAuthenticated && (
+                                <Nav.Link onClick={logout}>Logout</Nav.Link>
+                            )}
+                            {!authState.isAuthenticated && (
+                                <Nav.Link onClick={login}>Login</Nav.Link>
+                            )}
                         </Nav>
                     </Navbar.Collapse>
                 </Container>
