@@ -9,6 +9,7 @@ import config from './config';
 import Home from "./components/Home";
 import NewPage from "./components/NewPage";
 import Loading from './components/Loading';
+import DeploymentRoster from './components/DeploymentRoster';
 
 const oktaAuth = new OktaAuth(config.oidc);
 
@@ -25,6 +26,7 @@ function App() {
         <Route path="/new" element={<RequiredAuth />}>
           <Route path="" element={<NewPage />} />
         </Route>
+        <Route path="/deploymentroster" element={<DeploymentRoster />} />
         <Route path="login/callback" element={<LoginCallback loadingElement={<Loading />} />} />
       </Routes>
     </Security>
