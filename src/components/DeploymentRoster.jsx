@@ -32,9 +32,12 @@ export default function DeploymentRoster() {
     if (error) return <Alert variant="danger">Error: {error}</Alert>;
 
     const handleRowClick = (item) => {
-        navigate(`/deploymentroster/details/${item.date}`, { state: { item } });
+        if (item.provider === 'gc') {
+            navigate(`/deploymentroster/details/gc/${item.date}`, { state: { item } });
+        } else {
+            navigate(`/deploymentroster/details/aws/${item.date}`, { state: { item } });
+        }
     };
-
     const isDetailsPage = location.pathname.includes('/deploymentroster/details/');
 
     return (
