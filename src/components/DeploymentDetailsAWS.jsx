@@ -53,15 +53,46 @@ export default function DeploymentDetailsAWS() {
     };
 
     const handleSave = () => {
-        console.log('New Lambda Function:', newLambda);
-        setShowModal(false);
-        setNewLambda({
-            app: '',
-            owner: '',
-            additional_configs: '',
-            function_name: '',
-            scrum_team: ''
-        });
+        const postData = {
+            app: newLambda.app,
+            owner: newLambda.owner,
+            additional_configs: newLambda.additional_configs,
+            function_name: newLambda.function_name,
+            scrum_team: newLambda.scrum_team
+        };
+
+        fetch(`https://62xa9k0qje.execute-api.us-east-1.amazonaws.com/dev/deploymentroster?date=${date}&provider=${provider}&service=lambda`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(postData)
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                console.log('Success:', data);
+                setShowModal(false);
+                setNewLambda({
+                    app: '',
+                    owner: '',
+                    additional_configs: '',
+                    function_name: '',
+                    scrum_team: ''
+                });
+                // Optionally, refresh the data to show the new lambda function
+                setData(prevData => ({
+                    ...prevData,
+                    lambda: [...prevData.lambda, postData]
+                }));
+            })
+            .catch((error) => {
+                setError(error.message);
+            });
     };
 
     const handleChange = (e) => {
