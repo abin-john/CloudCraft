@@ -1,13 +1,34 @@
-import { useLocation } from 'react-router';
-import { Container, Table } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Container, Table, Spinner, Alert } from 'react-bootstrap';
 
 export default function DeploymentDetailsGC() {
-    const location = useLocation();
-    const { item } = location.state || {};
+    const { provider, date } = useParams();
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    if (!item) {
-        return <Container className="mt-4"><p>No details available.</p></Container>;
-    }
+    useEffect(() => {
+        fetch(`https://62xa9k0qje.execute-api.us-east-1.amazonaws.com/dev/deploymentroster/details?date=${date}&provider=${provider}`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                setData(data);
+                setLoading(false);
+            })
+            .catch((error) => {
+                setError(error.message);
+                setLoading(false);
+            });
+    }, [date, provider]);
+
+    if (loading) return <Spinner animation="border" role="status"><span className="sr-only">Loading...</span></Spinner>;
+    if (error) return <Alert variant="danger">Error: {error}</Alert>;
+    if (!data) return <Container className="mt-4"><p>No details available.</p></Container>;
 
     return (
         <Container className="mt-4">
@@ -16,23 +37,23 @@ export default function DeploymentDetailsGC() {
                 <tbody>
                     <tr>
                         <th>Date</th>
-                        <td>{item.date}</td>
+                        <td>{data.date}</td>
                     </tr>
                     <tr>
                         <th>Cloud Provider</th>
-                        <td>{item.provider}</td>
+                        <td>{data.provider}</td>
                     </tr>
                     <tr>
                         <th>Created User</th>
-                        <td>{item.created_usr}</td>
+                        <td>{data.created_usr}</td>
                     </tr>
                     <tr>
                         <th>Last Updated User</th>
-                        <td>{item.last_updated_usr}</td>
+                        <td>{data.last_updated_usr}</td>
                     </tr>
                     <tr>
                         <th>Is Locked</th>
-                        <td>{item.is_locked}</td>
+                        <td>{data.is_locked}</td>
                     </tr>
                 </tbody>
             </Table>
@@ -46,7 +67,7 @@ export default function DeploymentDetailsGC() {
                     </tr>
                 </thead>
                 <tbody>
-                    {item.queues.map((queue, index) => (
+                    {data.queues.map((queue, index) => (
                         <tr key={index}>
                             <td>{queue.name}</td>
                             <td>{queue.Division}</td>
@@ -64,7 +85,7 @@ export default function DeploymentDetailsGC() {
                     </tr>
                 </thead>
                 <tbody>
-                    {item.DataTable.map((dataTable, index) => (
+                    {data.DataTable.map((dataTable, index) => (
                         <tr key={index}>
                             <td>{dataTable.name}</td>
                             <td>{dataTable.Division}</td>

@@ -29,8 +29,8 @@ function App() {
           <Route path="" element={<NewPage />} />
         </Route>
         <Route path="/deploymentroster" element={<DeploymentRoster />}>
-          <Route path="details/aws/:date" element={<DeploymentDetailsAWS />} />
-          <Route path="details/gc/:date" element={<DeploymentDetailsGC />} />
+          <Route path="details/aws/:date/:provider" element={<DeploymentDetailsAWS />} />
+          <Route path="details/gc/:date/:provider" element={<DeploymentDetailsGC />} />
         </Route>
         <Route path="login/callback" element={<LoginCallback loadingElement={<Loading />} />} />
       </Routes>

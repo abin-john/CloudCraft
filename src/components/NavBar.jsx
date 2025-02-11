@@ -29,10 +29,10 @@ export default function NavBar() {
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">
-                            <Nav.Link href="#home">Confluence</Nav.Link>
-                            <NavDropdown title="GC Release Component" id="basic-nav-dropdown" menuVariant="dark">
-                                <NavDropdown.Item className="bg-dark text-white" href="#action/3.1">Action</NavDropdown.Item>
-                                <NavDropdown.Item className="bg-dark text-white" href="#action/3.2">Another action</NavDropdown.Item>
+                            <Nav.Link href="/deploymentroster">Deploymet Roster</Nav.Link>
+                            <NavDropdown title="Deployment Roster" id="basic-nav-dropdown" menuVariant="dark">
+                                <NavDropdown.Item className="bg-dark text-white" href="#action/3.1">AWS</NavDropdown.Item>
+                                <NavDropdown.Item className="bg-dark text-white" href="#action/3.2">GC</NavDropdown.Item>
                                 <NavDropdown.Item className="bg-dark text-white" href="#action/3.3">Something</NavDropdown.Item>
                                 <NavDropdown.Divider />
                                 <NavDropdown.Item className="bg-dark text-white" href="#action/3.4">Separated link</NavDropdown.Item>

@@ -11,7 +11,7 @@ export default function DeploymentRoster() {
     const location = useLocation();
 
     useEffect(() => {
-        fetch("https://62xa9k0qje.execute-api.us-east-1.amazonaws.com/dev/getDeploymentRoster")
+        fetch("https://62xa9k0qje.execute-api.us-east-1.amazonaws.com/dev/deploymentroster")
             .then((response) => {
                 if (!response.ok) {
                     throw new Error("Network response was not ok");
@@ -33,11 +33,12 @@ export default function DeploymentRoster() {
 
     const handleRowClick = (item) => {
         if (item.provider === 'gc') {
-            navigate(`/deploymentroster/details/gc/${item.date}`, { state: { item } });
+            navigate(`/deploymentroster/details/gc/${item.date}/${item.provider}`);
         } else {
-            navigate(`/deploymentroster/details/aws/${item.date}`, { state: { item } });
+            navigate(`/deploymentroster/details/aws/${item.date}/${item.provider}`);
         }
     };
+
     const isDetailsPage = location.pathname.includes('/deploymentroster/details/');
 
     return (
@@ -56,7 +57,7 @@ export default function DeploymentRoster() {
                         </thead>
                         <tbody>
                             {data.map((item) => (
-                                <tr key={item.id}>
+                                <tr key={`${item.date}-${item.provider}`}>
                                     <td>
                                         <Button variant="outline-success" onClick={() => handleRowClick(item)}>
                                             {item.date}

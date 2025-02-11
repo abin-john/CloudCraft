@@ -1,11 +1,12 @@
-import { useLocation } from 'react-router';
-import { useState } from 'react';
-import { Container, Table, Button, Modal, Form } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Container, Table, Button, Modal, Form, Spinner, Alert } from 'react-bootstrap';
 
 export default function DeploymentDetailsAWS() {
-    const location = useLocation();
-    const { item } = location.state || {};
-    const [data] = useState(item);
+    const { provider, date } = useParams();
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [newLambda, setNewLambda] = useState({
         app: '',
@@ -15,9 +16,27 @@ export default function DeploymentDetailsAWS() {
         scrum_team: ''
     });
 
-    if (!item) {
-        return <Container className="mt-4"><p>No details available.</p></Container>;
-    }
+    useEffect(() => {
+        fetch(`https://62xa9k0qje.execute-api.us-east-1.amazonaws.com/dev/deploymentroster/details?date=${date}&provider=${provider}`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                setData(data);
+                setLoading(false);
+            })
+            .catch((error) => {
+                setError(error.message);
+                setLoading(false);
+            });
+    }, [date, provider]);
+
+    if (loading) return <Spinner animation="border" role="status"><span className="sr-only">Loading...</span></Spinner>;
+    if (error) return <Alert variant="danger">Error: {error}</Alert>;
+    if (!data) return <Container className="mt-4"><p>No details available.</p></Container>;
 
     const handleEdit = (type, index) => {
         // Implement edit functionality here
