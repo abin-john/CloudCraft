@@ -8,13 +8,10 @@ export default function DeploymentDetailsAWS() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showModal, setShowModal] = useState(false);
-    const [newLambda, setNewLambda] = useState({
-        app: '',
-        owner: '',
-        additional_configs: '',
-        function_name: '',
-        scrum_team: ''
-    });
+    const [modalTitle, setModalTitle] = useState('');
+    const [modalFields, setModalFields] = useState([]);
+    const [newEntry, setNewEntry] = useState({});
+    const [currentService, setCurrentService] = useState('');
 
     useEffect(() => {
         fetch(`https://62xa9k0qje.execute-api.us-east-1.amazonaws.com/dev/deploymentroster/details?date=${date}&provider=${provider}`)
@@ -48,20 +45,36 @@ export default function DeploymentDetailsAWS() {
         console.log(`Delete ${type} at index ${index}`);
     };
 
-    const handleAddRow = () => {
+    const handleAddRow = (type) => {
+        let fields = [];
+        switch (type) {
+            case 'lambda':
+                fields = ['App', 'Owner', 'Additional Configs', 'Function Name', 'Scrum Team'];
+                break;
+            case 'contact_flows':
+                fields = ['Name', 'Type', 'New', 'Bitbucket Link'];
+                break;
+            case 'api_gateway':
+                fields = ['API Gateway Name', 'Route', 'Method', 'Authorization', 'Lambda Function', 'Owner', 'Scrum Team', 'API Type'];
+                break;
+            default:
+                break;
+        }
+        setModalTitle(`Add ${type.replace('_', ' ')}`);
+        setModalFields(fields);
+        setNewEntry({});
+        setCurrentService(type);
         setShowModal(true);
     };
 
     const handleSave = () => {
-        const postData = {
-            app: newLambda.app,
-            owner: newLambda.owner,
-            additional_configs: newLambda.additional_configs,
-            function_name: newLambda.function_name,
-            scrum_team: newLambda.scrum_team
-        };
+        const postData = modalFields.reduce((acc, field) => {
+            const key = field.toLowerCase().replace(/ /g, '_');
+            acc[key] = newEntry[key] || '';
+            return acc;
+        }, {});
 
-        fetch(`https://62xa9k0qje.execute-api.us-east-1.amazonaws.com/dev/deploymentroster?date=${date}&provider=${provider}&service=lambda`, {
+        fetch(`https://62xa9k0qje.execute-api.us-east-1.amazonaws.com/dev/deploymentroster?date=${date}&provider=${provider}&service=${currentService}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -77,17 +90,11 @@ export default function DeploymentDetailsAWS() {
             .then((data) => {
                 console.log('Success:', data);
                 setShowModal(false);
-                setNewLambda({
-                    app: '',
-                    owner: '',
-                    additional_configs: '',
-                    function_name: '',
-                    scrum_team: ''
-                });
-                // Optionally, refresh the data to show the new lambda function
+                setNewEntry({});
+                // Optionally, refresh the data to show the new entry
                 setData(prevData => ({
                     ...prevData,
-                    lambda: [...prevData.lambda, postData]
+                    [currentService]: [...prevData[currentService], postData]
                 }));
             })
             .catch((error) => {
@@ -97,7 +104,7 @@ export default function DeploymentDetailsAWS() {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setNewLambda(prevState => ({
+        setNewEntry(prevState => ({
             ...prevState,
             [name]: value
         }));
@@ -129,151 +136,123 @@ export default function DeploymentDetailsAWS() {
                 </Table>
             </Container>
 
-            <h3>Lambda Functions</h3>
-            <Table striped bordered hover>
-                <thead className="bg-primary text-white">
-                    <tr>
-                        <th>App</th>
-                        <th>Owner</th>
-                        <th>Additional Configs</th>
-                        <th>Function Name</th>
-                        <th>Scrum Team</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {data.lambda.map((lambda, index) => (
-                        <tr key={index}>
-                            <td>{lambda.app}</td>
-                            <td>{lambda.owner}</td>
-                            <td>{lambda.additional_configs}</td>
-                            <td>{lambda.function_name}</td>
-                            <td>{lambda.scrum_team}</td>
-                            <td>
-                                <Button variant="warning" onClick={() => handleEdit('lambda', index)}>Edit</Button>{' '}
-                                <Button variant="danger" onClick={() => handleDelete('lambda', index)}>Delete</Button>
-                            </td>
+            <Container>
+                <h3>Lambda Functions</h3>
+                <Table striped bordered hover>
+                    <thead className="bg-primary text-white">
+                        <tr>
+                            <th>App</th>
+                            <th>Owner</th>
+                            <th>Additional Configs</th>
+                            <th>Function Name</th>
+                            <th>Scrum Team</th>
+                            <th>Actions</th>
                         </tr>
-                    ))}
-                </tbody>
-            </Table>
-            <Button variant="primary" onClick={handleAddRow}>Add Lambda Function</Button>
+                    </thead>
+                    <tbody>
+                        {data.lambda.map((lambda, index) => (
+                            <tr key={index}>
+                                <td>{lambda.app}</td>
+                                <td>{lambda.owner}</td>
+                                <td>{lambda.additional_configs}</td>
+                                <td>{lambda.function_name}</td>
+                                <td>{lambda.scrum_team}</td>
+                                <td>
+                                    <Button variant="warning" onClick={() => handleEdit('lambda', index)}>Edit</Button>{' '}
+                                    <Button variant="danger" onClick={() => handleDelete('lambda', index)}>Delete</Button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </Table>
+                <Button variant="primary" onClick={() => handleAddRow('lambda')}>Add Lambda Function</Button>
+            </Container>
 
-            <h3>Contact Flows</h3>
-            <Table striped bordered hover>
-                <thead className="bg-primary text-white">
-                    <tr>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>New</th>
-                        <th>Bitbucket Link</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {data.contact_flows.map((flow, index) => (
-                        <tr key={index}>
-                            <td>{flow.name}</td>
-                            <td>{flow.type}</td>
-                            <td>{flow.new}</td>
-                            <td>{flow.bitbucket_link}</td>
-                            <td>
-                                <Button variant="warning" onClick={() => handleEdit('contact_flows', index)}>Edit</Button>{' '}
-                                <Button variant="danger" onClick={() => handleDelete('contact_flows', index)}>Delete</Button>
-                            </td>
+            <Container>
+                <h3>Contact Flows</h3>
+                <Table striped bordered hover>
+                    <thead className="bg-primary text-white">
+                        <tr>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>New</th>
+                            <th>Bitbucket Link</th>
+                            <th>Actions</th>
                         </tr>
-                    ))}
-                </tbody>
-            </Table>
-            <Button variant="primary" onClick={() => handleAddRow('contact_flows')}>Add Contact Flow</Button>
+                    </thead>
+                    <tbody>
+                        {data.contact_flows.map((flow, index) => (
+                            <tr key={index}>
+                                <td>{flow.name}</td>
+                                <td>{flow.type}</td>
+                                <td>{flow.new}</td>
+                                <td>{flow.bitbucket_link}</td>
+                                <td>
+                                    <Button variant="warning" onClick={() => handleEdit('contact_flows', index)}>Edit</Button>{' '}
+                                    <Button variant="danger" onClick={() => handleDelete('contact_flows', index)}>Delete</Button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </Table>
+                <Button variant="primary" onClick={() => handleAddRow('contact_flows')}>Add Contact Flow</Button>
+            </Container>
 
-            <h3>API Gateways</h3>
-            <Table striped bordered hover>
-                <thead className="bg-primary text-white">
-                    <tr>
-                        <th>API Gateway Name</th>
-                        <th>Route</th>
-                        <th>Method</th>
-                        <th>Authorization</th>
-                        <th>Lambda Function</th>
-                        <th>Owner</th>
-                        <th>Scrum Team</th>
-                        <th>API Type</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {data.api_gateway.map((api, index) => (
-                        <tr key={index}>
-                            <td>{api.api_gateway_name}</td>
-                            <td>{api.route}</td>
-                            <td>{api.method}</td>
-                            <td>{api.authorization}</td>
-                            <td>{api.lambda_function}</td>
-                            <td>{api.owner}</td>
-                            <td>{api.scrum_team}</td>
-                            <td>{api.api_type}</td>
-                            <td>
-                                <Button variant="warning" onClick={() => handleEdit('api_gateway', index)}>Edit</Button>{' '}
-                                <Button variant="danger" onClick={() => handleDelete('api_gateway', index)}>Delete</Button>
-                            </td>
+            <Container>
+                <h3>API Gateways</h3>
+                <Table striped bordered hover>
+                    <thead className="bg-primary text-white">
+                        <tr>
+                            <th>API Gateway Name</th>
+                            <th>Route</th>
+                            <th>Method</th>
+                            <th>Authorization</th>
+                            <th>Lambda Function</th>
+                            <th>Owner</th>
+                            <th>Scrum Team</th>
+                            <th>API Type</th>
+                            <th>Actions</th>
                         </tr>
-                    ))}
-                </tbody>
-            </Table>
-            <Button variant="primary" onClick={() => handleAddRow('api_gateway')}>Add API Gateway</Button>
+                    </thead>
+                    <tbody>
+                        {data.api_gateway.map((api, index) => (
+                            <tr key={index}>
+                                <td>{api.api_gateway_name}</td>
+                                <td>{api.route}</td>
+                                <td>{api.method}</td>
+                                <td>{api.authorization}</td>
+                                <td>{api.lambda_function}</td>
+                                <td>{api.owner}</td>
+                                <td>{api.scrum_team}</td>
+                                <td>{api.api_type}</td>
+                                <td>
+                                    <Button variant="warning" onClick={() => handleEdit('api_gateway', index)}>Edit</Button>{' '}
+                                    <Button variant="danger" onClick={() => handleDelete('api_gateway', index)}>Delete</Button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </Table>
+                <Button variant="primary" onClick={() => handleAddRow('api_gateway')}>Add API Gateway</Button>
+            </Container>
 
             <Modal show={showModal} onHide={() => setShowModal(false)}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Add Lambda Function</Modal.Title>
+                    <Modal.Title>{modalTitle}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
-                        <Form.Group controlId="formApp">
-                            <Form.Label>App</Form.Label>
-                            <Form.Control
-                                type="text"
-                                name="app"
-                                value={newLambda.app}
-                                onChange={handleChange}
-                            />
-                        </Form.Group>
-                        <Form.Group controlId="formOwner">
-                            <Form.Label>Owner</Form.Label>
-                            <Form.Control
-                                type="text"
-                                name="owner"
-                                value={newLambda.owner}
-                                onChange={handleChange}
-                            />
-                        </Form.Group>
-                        <Form.Group controlId="formAdditionalConfigs">
-                            <Form.Label>Additional Configs</Form.Label>
-                            <Form.Control
-                                type="text"
-                                name="additional_configs"
-                                value={newLambda.additional_configs}
-                                onChange={handleChange}
-                            />
-                        </Form.Group>
-                        <Form.Group controlId="formFunctionName">
-                            <Form.Label>Function Name</Form.Label>
-                            <Form.Control
-                                type="text"
-                                name="function_name"
-                                value={newLambda.function_name}
-                                onChange={handleChange}
-                            />
-                        </Form.Group>
-                        <Form.Group controlId="formScrumTeam">
-                            <Form.Label>Scrum Team</Form.Label>
-                            <Form.Control
-                                type="text"
-                                name="scrum_team"
-                                value={newLambda.scrum_team}
-                                onChange={handleChange}
-                            />
-                        </Form.Group>
+                        {modalFields.map((field, index) => (
+                            <Form.Group controlId={`form${field.replace(' ', '')}`} key={index}>
+                                <Form.Label>{field}</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    name={field.toLowerCase().replace(/ /g, '_')}
+                                    value={newEntry[field.toLowerCase().replace(/ /g, '_')] || ''}
+                                    onChange={handleChange}
+                                />
+                            </Form.Group>
+                        ))}
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
