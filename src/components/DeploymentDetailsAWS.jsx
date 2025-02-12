@@ -12,6 +12,7 @@ export default function DeploymentDetailsAWS() {
     const [modalFields, setModalFields] = useState([]);
     const [newEntry, setNewEntry] = useState({});
     const [currentService, setCurrentService] = useState('');
+    const [editIndex, setEditIndex] = useState(null);
 
     useEffect(() => {
         fetch(`https://62xa9k0qje.execute-api.us-east-1.amazonaws.com/dev/deploymentroster/details?date=${date}&provider=${provider}`)
@@ -36,20 +37,48 @@ export default function DeploymentDetailsAWS() {
     if (!data) return <Container className="mt-4"><p>No details available.</p></Container>;
 
     const handleEdit = (type, index) => {
-        // Implement edit functionality here
-        console.log(`Edit ${type} at index ${index}`);
+        setCurrentService(type);
+        setEditIndex(index);
+        setNewEntry(data[type][index]);
+        setModalTitle(`Edit ${type.replace('_', ' ')}`);
+        setModalFields(Object.keys(data[type][index]).map(key => key.replace(/_/g, ' ')));
+        setShowModal(true);
     };
 
     const handleDelete = (type, index) => {
-        // Implement delete functionality here
-        console.log(`Delete ${type} at index ${index}`);
+        const itemToDelete = data[type][index];
+
+        fetch(`https://62xa9k0qje.execute-api.us-east-1.amazonaws.com/dev/deploymentroster?date=${date}&provider=${provider}&service=${type}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(itemToDelete)
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then((responseData) => {
+                console.log('Success:', responseData);
+                // Update the state to remove the deleted item
+                setData(prevData => ({
+                    ...prevData,
+                    [type]: prevData[type].filter((_, i) => i !== index)
+                }));
+            })
+            .catch((error) => {
+                setError(error.message);
+            });
     };
 
     const handleAddRow = (type) => {
         let fields = [];
         switch (type) {
             case 'lambda':
-                fields = ['App', 'Owner', 'Additional Configs', 'Function Name', 'Scrum Team'];
+                fields = ['Function Name', 'Application', 'Owner', 'Scrum Team', 'Runtime', 'Role', 'Layers', 'Environment Variable', 'Comments'];
                 break;
             case 'contact_flows':
                 fields = ['Name', 'Type', 'New', 'Bitbucket Link'];
@@ -64,6 +93,7 @@ export default function DeploymentDetailsAWS() {
         setModalFields(fields);
         setNewEntry({});
         setCurrentService(type);
+        setEditIndex(null);
         setShowModal(true);
     };
 
@@ -74,32 +104,71 @@ export default function DeploymentDetailsAWS() {
             return acc;
         }, {});
 
-        fetch(`https://62xa9k0qje.execute-api.us-east-1.amazonaws.com/dev/deploymentroster?date=${date}&provider=${provider}&service=${currentService}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(postData)
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
-                return response.json();
+        if (editIndex === null) {
+            // Add new entry
+            postData.id = data[currentService].length + 1;
+
+            fetch(`https://62xa9k0qje.execute-api.us-east-1.amazonaws.com/dev/deploymentroster?date=${date}&provider=${provider}&service=${currentService}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(postData)
             })
-            .then((data) => {
-                console.log('Success:', data);
-                setShowModal(false);
-                setNewEntry({});
-                // Optionally, refresh the data to show the new entry
-                setData(prevData => ({
-                    ...prevData,
-                    [currentService]: [...prevData[currentService], postData]
-                }));
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error("Network response was not ok");
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    console.log('Success:', data);
+                    setShowModal(false);
+                    setNewEntry({});
+                    // Optionally, refresh the data to show the new entry
+                    setData(prevData => ({
+                        ...prevData,
+                        [currentService]: [...prevData[currentService], postData]
+                    }));
+                })
+                .catch((error) => {
+                    setError(error.message);
+                });
+        } else {
+            // Edit existing entry
+            postData.id = data[currentService][editIndex].id;
+
+            fetch(`https://62xa9k0qje.execute-api.us-east-1.amazonaws.com/dev/deploymentroster?date=${date}&provider=${provider}&service=${currentService}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(postData)
             })
-            .catch((error) => {
-                setError(error.message);
-            });
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error("Network response was not ok");
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    console.log('Success:', data);
+                    setShowModal(false);
+                    setNewEntry({});
+                    // Optionally, refresh the data to show the edited entry
+                    setData(prevData => {
+                        const updatedService = [...prevData[currentService]];
+                        updatedService[editIndex] = postData;
+                        return {
+                            ...prevData,
+                            [currentService]: updatedService
+                        };
+                    });
+                })
+                .catch((error) => {
+                    setError(error.message);
+                });
+        }
     };
 
     const handleChange = (e) => {
@@ -111,8 +180,8 @@ export default function DeploymentDetailsAWS() {
     };
 
     return (
-        <Container className="mt-4">
-            <Container>
+        <Container fluid className="mt-4">
+            <Container fluid>
                 <h2>Deployment Details (AWS)</h2>
                 <Table striped bordered hover>
                     <tbody>
@@ -136,27 +205,33 @@ export default function DeploymentDetailsAWS() {
                 </Table>
             </Container>
 
-            <Container>
+            <Container fluid>
                 <h3>Lambda Functions</h3>
                 <Table striped bordered hover>
                     <thead className="bg-primary text-white">
                         <tr>
-                            <th>App</th>
-                            <th>Owner</th>
-                            <th>Additional Configs</th>
                             <th>Function Name</th>
+                            <th>Application</th>
+                            <th>Owner</th>
                             <th>Scrum Team</th>
+                            <th>Runtime</th>
+                            <th>Layers</th>
+                            <th>Environment Variable</th>
+                            <th>Comments</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {data.lambda.map((lambda, index) => (
                             <tr key={index}>
-                                <td>{lambda.app}</td>
-                                <td>{lambda.owner}</td>
-                                <td>{lambda.additional_configs}</td>
                                 <td>{lambda.function_name}</td>
+                                <td>{lambda.application}</td>
+                                <td>{lambda.owner}</td>
                                 <td>{lambda.scrum_team}</td>
+                                <td>{lambda.runtime}</td>
+                                <td>{lambda.layers}</td>
+                                <td>{lambda.environment_variable}</td>
+                                <td>{lambda.comments}</td>
                                 <td>
                                     <Button variant="warning" onClick={() => handleEdit('lambda', index)}>Edit</Button>{' '}
                                     <Button variant="danger" onClick={() => handleDelete('lambda', index)}>Delete</Button>
@@ -168,7 +243,7 @@ export default function DeploymentDetailsAWS() {
                 <Button variant="primary" onClick={() => handleAddRow('lambda')}>Add Lambda Function</Button>
             </Container>
 
-            <Container>
+            <Container fluid>
                 <h3>Contact Flows</h3>
                 <Table striped bordered hover>
                     <thead className="bg-primary text-white">
@@ -198,7 +273,7 @@ export default function DeploymentDetailsAWS() {
                 <Button variant="primary" onClick={() => handleAddRow('contact_flows')}>Add Contact Flow</Button>
             </Container>
 
-            <Container>
+            <Container fluid>
                 <h3>API Gateways</h3>
                 <Table striped bordered hover>
                     <thead className="bg-primary text-white">
@@ -246,7 +321,8 @@ export default function DeploymentDetailsAWS() {
                             <Form.Group controlId={`form${field.replace(' ', '')}`} key={index}>
                                 <Form.Label>{field}</Form.Label>
                                 <Form.Control
-                                    type="text"
+                                    as={field === 'Environment Variable' || field === 'Comments' ? 'textarea' : 'input'}
+                                    rows={field === 'Environment Variable' || field === 'Comments' ? 3 : undefined}
                                     name={field.toLowerCase().replace(/ /g, '_')}
                                     value={newEntry[field.toLowerCase().replace(/ /g, '_')] || ''}
                                     onChange={handleChange}

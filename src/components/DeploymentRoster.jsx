@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Table, Container, Spinner, Alert, Button } from "react-bootstrap";
 import { useNavigate, Outlet, useLocation } from 'react-router';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function DeploymentRoster() {
     const [data, setData] = useState([]);
