@@ -28,7 +28,13 @@ export default function DeploymentRoster() {
             });
     }, []);
 
-    if (loading) return <Spinner animation="border" role="status"><span className="visually-hidden">Loading...</span></Spinner>;
+    if (loading) return (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+            <Spinner animation="border" role="status">
+                <span className="visually-hidden">Loading...</span>
+            </Spinner>
+        </div>
+    );
     if (error) return <Alert variant="danger">Error: {error}</Alert>;
 
     const handleRowClick = (item) => {
