@@ -180,166 +180,168 @@ export default function DeploymentDetailsAWS() {
     };
 
     return (
-        <Container fluid className="mt-4">
-            <Container fluid>
-                <h2>Deployment Details (AWS)</h2>
-                <Table striped bordered hover>
-                    <tbody>
-                        <tr>
-                            <th>Date</th>
-                            <td>{data.date}</td>
-                        </tr>
-                        <tr>
-                            <th>Cloud Provider</th>
-                            <td>{data.provider}</td>
-                        </tr>
-                        <tr>
-                            <th>Created User</th>
-                            <td>{data.created_usr}</td>
-                        </tr>
-                        <tr>
-                            <th>Last Updated User</th>
-                            <td>{data.last_updated_usr}</td>
-                        </tr>
-                    </tbody>
-                </Table>
-            </Container>
-
-            <Container fluid>
-                <h3>Lambda Functions</h3>
-                <Table striped bordered hover>
-                    <thead className="bg-primary text-white">
-                        <tr>
-                            <th>Function Name</th>
-                            <th>Application</th>
-                            <th>Owner</th>
-                            <th>Scrum Team</th>
-                            <th>Runtime</th>
-                            <th>Layers</th>
-                            <th>Environment Variable</th>
-                            <th>Comments</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {data.lambda.map((lambda, index) => (
-                            <tr key={index}>
-                                <td>{lambda.function_name}</td>
-                                <td>{lambda.application}</td>
-                                <td>{lambda.owner}</td>
-                                <td>{lambda.scrum_team}</td>
-                                <td>{lambda.runtime}</td>
-                                <td>{lambda.layers}</td>
-                                <td>{lambda.environment_variable}</td>
-                                <td>{lambda.comments}</td>
-                                <td>
-                                    <Button variant="warning" onClick={() => handleEdit('lambda', index)}>Edit</Button>{' '}
-                                    <Button variant="danger" onClick={() => handleDelete('lambda', index)}>Delete</Button>
-                                </td>
+        <>
+            <Container fluid className="mt-4">
+                <Container fluid>
+                    <h2>Deployment Details (AWS)</h2>
+                    <Table striped bordered hover>
+                        <tbody>
+                            <tr>
+                                <th>Date</th>
+                                <td>{data.date}</td>
                             </tr>
-                        ))}
-                    </tbody>
-                </Table>
-                <Button variant="primary" onClick={() => handleAddRow('lambda')}>Add Lambda Function</Button>
-            </Container>
-
-            <Container fluid>
-                <h3>Contact Flows</h3>
-                <Table striped bordered hover>
-                    <thead className="bg-primary text-white">
-                        <tr>
-                            <th>Name</th>
-                            <th>Type</th>
-                            <th>New</th>
-                            <th>Bitbucket Link</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {data.contact_flows.map((flow, index) => (
-                            <tr key={index}>
-                                <td>{flow.name}</td>
-                                <td>{flow.type}</td>
-                                <td>{flow.new}</td>
-                                <td>{flow.bitbucket_link}</td>
-                                <td>
-                                    <Button variant="warning" onClick={() => handleEdit('contact_flows', index)}>Edit</Button>{' '}
-                                    <Button variant="danger" onClick={() => handleDelete('contact_flows', index)}>Delete</Button>
-                                </td>
+                            <tr>
+                                <th>Cloud Provider</th>
+                                <td>{data.provider}</td>
                             </tr>
-                        ))}
-                    </tbody>
-                </Table>
-                <Button variant="primary" onClick={() => handleAddRow('contact_flows')}>Add Contact Flow</Button>
-            </Container>
-
-            <Container fluid>
-                <h3>API Gateways</h3>
-                <Table striped bordered hover>
-                    <thead className="bg-primary text-white">
-                        <tr>
-                            <th>API Gateway Name</th>
-                            <th>Route</th>
-                            <th>Method</th>
-                            <th>Authorization</th>
-                            <th>Lambda Function</th>
-                            <th>Owner</th>
-                            <th>Scrum Team</th>
-                            <th>API Type</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {data.api_gateway.map((api, index) => (
-                            <tr key={index}>
-                                <td>{api.api_gateway_name}</td>
-                                <td>{api.route}</td>
-                                <td>{api.method}</td>
-                                <td>{api.authorization}</td>
-                                <td>{api.lambda_function}</td>
-                                <td>{api.owner}</td>
-                                <td>{api.scrum_team}</td>
-                                <td>{api.api_type}</td>
-                                <td>
-                                    <Button variant="warning" onClick={() => handleEdit('api_gateway', index)}>Edit</Button>{' '}
-                                    <Button variant="danger" onClick={() => handleDelete('api_gateway', index)}>Delete</Button>
-                                </td>
+                            <tr>
+                                <th>Created User</th>
+                                <td>{data.created_usr}</td>
                             </tr>
-                        ))}
-                    </tbody>
-                </Table>
-                <Button variant="primary" onClick={() => handleAddRow('api_gateway')}>Add API Gateway</Button>
-            </Container>
+                            <tr>
+                                <th>Last Updated User</th>
+                                <td>{data.last_updated_usr}</td>
+                            </tr>
+                        </tbody>
+                    </Table>
+                </Container>
 
-            <Modal show={showModal} onHide={() => setShowModal(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>{modalTitle}</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form>
-                        {modalFields.map((field, index) => (
-                            <Form.Group controlId={`form${field.replace(' ', '')}`} key={index}>
-                                <Form.Label>{field}</Form.Label>
-                                <Form.Control
-                                    as={field === 'Environment Variable' || field === 'Comments' ? 'textarea' : 'input'}
-                                    rows={field === 'Environment Variable' || field === 'Comments' ? 3 : undefined}
-                                    name={field.toLowerCase().replace(/ /g, '_')}
-                                    value={newEntry[field.toLowerCase().replace(/ /g, '_')] || ''}
-                                    onChange={handleChange}
-                                />
-                            </Form.Group>
-                        ))}
-                    </Form>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowModal(false)}>
-                        Close
-                    </Button>
-                    <Button variant="primary" onClick={handleSave}>
-                        Save Changes
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-        </Container>
+                <Container fluid>
+                    <h3>Lambda Functions</h3>
+                    <Table striped bordered hover>
+                        <thead className="bg-primary text-white">
+                            <tr>
+                                <th>Function Name</th>
+                                <th>Application</th>
+                                <th>Owner</th>
+                                <th>Scrum Team</th>
+                                <th>Runtime</th>
+                                <th>Layers</th>
+                                <th>Environment Variable</th>
+                                <th>Comments</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {data.lambda.map((lambda, index) => (
+                                <tr key={index}>
+                                    <td>{lambda.function_name}</td>
+                                    <td>{lambda.application}</td>
+                                    <td>{lambda.owner}</td>
+                                    <td>{lambda.scrum_team}</td>
+                                    <td>{lambda.runtime}</td>
+                                    <td>{lambda.layers}</td>
+                                    <td>{lambda.environment_variable}</td>
+                                    <td>{lambda.comments}</td>
+                                    <td>
+                                        <Button variant="warning" onClick={() => handleEdit('lambda', index)}>Edit</Button>{' '}
+                                        <Button variant="danger" onClick={() => handleDelete('lambda', index)}>Delete</Button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                    <Button variant="primary" onClick={() => handleAddRow('lambda')}>Add Lambda Function</Button>
+                </Container>
+
+                <Container fluid>
+                    <h3>Contact Flows</h3>
+                    <Table striped bordered hover>
+                        <thead className="bg-primary text-white">
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>New</th>
+                                <th>Bitbucket Link</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {data.contact_flows.map((flow, index) => (
+                                <tr key={index}>
+                                    <td>{flow.name}</td>
+                                    <td>{flow.type}</td>
+                                    <td>{flow.new}</td>
+                                    <td>{flow.bitbucket_link}</td>
+                                    <td>
+                                        <Button variant="warning" onClick={() => handleEdit('contact_flows', index)}>Edit</Button>{' '}
+                                        <Button variant="danger" onClick={() => handleDelete('contact_flows', index)}>Delete</Button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                    <Button variant="primary" onClick={() => handleAddRow('contact_flows')}>Add Contact Flow</Button>
+                </Container>
+
+                <Container fluid>
+                    <h3>API Gateways</h3>
+                    <Table striped bordered hover>
+                        <thead className="bg-primary text-white">
+                            <tr>
+                                <th>API Gateway Name</th>
+                                <th>Route</th>
+                                <th>Method</th>
+                                <th>Authorization</th>
+                                <th>Lambda Function</th>
+                                <th>Owner</th>
+                                <th>Scrum Team</th>
+                                <th>API Type</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {data.api_gateway.map((api, index) => (
+                                <tr key={index}>
+                                    <td>{api.api_gateway_name}</td>
+                                    <td>{api.route}</td>
+                                    <td>{api.method}</td>
+                                    <td>{api.authorization}</td>
+                                    <td>{api.lambda_function}</td>
+                                    <td>{api.owner}</td>
+                                    <td>{api.scrum_team}</td>
+                                    <td>{api.api_type}</td>
+                                    <td>
+                                        <Button variant="warning" onClick={() => handleEdit('api_gateway', index)}>Edit</Button>{' '}
+                                        <Button variant="danger" onClick={() => handleDelete('api_gateway', index)}>Delete</Button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                    <Button variant="primary" onClick={() => handleAddRow('api_gateway')}>Add API Gateway</Button>
+                </Container>
+
+                <Modal show={showModal} onHide={() => setShowModal(false)}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>{modalTitle}</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form>
+                            {modalFields.map((field, index) => (
+                                <Form.Group controlId={`form${field.replace(' ', '')}`} key={index}>
+                                    <Form.Label>{field}</Form.Label>
+                                    <Form.Control
+                                        as={field === 'Environment Variable' || field === 'Comments' ? 'textarea' : 'input'}
+                                        rows={field === 'Environment Variable' || field === 'Comments' ? 3 : undefined}
+                                        name={field.toLowerCase().replace(/ /g, '_')}
+                                        value={newEntry[field.toLowerCase().replace(/ /g, '_')] || ''}
+                                        onChange={handleChange}
+                                    />
+                                </Form.Group>
+                            ))}
+                        </Form>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => setShowModal(false)}>
+                            Close
+                        </Button>
+                        <Button variant="primary" onClick={handleSave}>
+                            Save Changes
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+            </Container>
+        </>
     );
 }

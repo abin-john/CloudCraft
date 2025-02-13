@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Table, Container, Spinner, Alert, Button } from "react-bootstrap";
 import { useNavigate, Outlet, useLocation } from 'react-router';
+import NavBar from "./NavBar"
 
 export default function DeploymentRoster() {
     const [data, setData] = useState([]);
@@ -27,7 +28,7 @@ export default function DeploymentRoster() {
             });
     }, []);
 
-    if (loading) return <Spinner animation="border" role="status"><span className="sr-only">Loading...</span></Spinner>;
+    if (loading) return <Spinner animation="border" role="status"><span className="visually-hidden">Loading...</span></Spinner>;
     if (error) return <Alert variant="danger">Error: {error}</Alert>;
 
     const handleRowClick = (item) => {
@@ -41,37 +42,40 @@ export default function DeploymentRoster() {
     const isDetailsPage = location.pathname.includes('/deploymentroster/details/');
 
     return (
-        <Container className="mt-4">
-            {!isDetailsPage && (
-                <>
-                    <h2>Deployment Roster</h2>
-                    <Table striped bordered hover>
-                        <thead className="bg-primary text-white">
-                            <tr>
-                                <th>Date</th>
-                                <th>Cloud Provider</th>
-                                <th>Created User</th>
-                                <th>Last Updated User</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {data.map((item) => (
-                                <tr key={`${item.date}-${item.provider}`}>
-                                    <td>
-                                        <Button variant="outline-success" onClick={() => handleRowClick(item)}>
-                                            {item.date}
-                                        </Button>
-                                    </td>
-                                    <td>{item.provider}</td>
-                                    <td>{item.created_usr}</td>
-                                    <td>{item.last_updated_usr}</td>
+        <>
+            <NavBar></NavBar>
+            <Container fluid className="mt-4">
+                {!isDetailsPage && (
+                    <>
+                        <h2>Deployment Roster</h2>
+                        <Table striped bordered hover>
+                            <thead className="bg-primary text-white">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Cloud Provider</th>
+                                    <th>Created User</th>
+                                    <th>Last Updated User</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </Table>
-                </>
-            )}
-            <Outlet />
-        </Container>
+                            </thead>
+                            <tbody>
+                                {data.map((item) => (
+                                    <tr key={`${item.date}-${item.provider}`}>
+                                        <td>
+                                            <Button variant="outline-success" onClick={() => handleRowClick(item)}>
+                                                {item.date}
+                                            </Button>
+                                        </td>
+                                        <td>{item.provider}</td>
+                                        <td>{item.created_usr}</td>
+                                        <td>{item.last_updated_usr}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                    </>
+                )}
+                <Outlet />
+            </Container>
+        </>
     );
 }
