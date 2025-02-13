@@ -182,7 +182,7 @@ export default function DeploymentDetailsAWS() {
     return (
         <>
             <Container fluid className="mt-4">
-                <Container fluid>
+                <Container fluid className="mt-4">
                     <h2>Deployment Details (AWS)</h2>
                     <Table striped bordered hover>
                         <tbody>
@@ -206,7 +206,7 @@ export default function DeploymentDetailsAWS() {
                     </Table>
                 </Container>
 
-                <Container fluid>
+                <Container fluid className="mt-4">
                     <h3>Lambda Functions</h3>
                     <Table striped bordered hover>
                         <thead className="bg-primary text-white">
@@ -244,7 +244,7 @@ export default function DeploymentDetailsAWS() {
                     <Button variant="primary" onClick={() => handleAddRow('lambda')}>Add Lambda Function</Button>
                 </Container>
 
-                <Container fluid>
+                <Container fluid className="mt-4">
                     <h3>Contact Flows</h3>
                     <Table striped bordered hover>
                         <thead className="bg-primary text-white">
@@ -274,7 +274,7 @@ export default function DeploymentDetailsAWS() {
                     <Button variant="primary" onClick={() => handleAddRow('contact_flows')}>Add Contact Flow</Button>
                 </Container>
 
-                <Container fluid>
+                <Container fluid className="mt-4">
                     <h3>API Gateways</h3>
                     <Table striped bordered hover>
                         <thead className="bg-primary text-white">
