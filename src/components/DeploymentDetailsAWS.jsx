@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { Container, Table, Button, Modal, Form, Spinner, Alert } from 'react-bootstrap';
+import { Container, Table, Button, Modal, Form, Spinner, Alert, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { useOktaAuth } from '@okta/okta-react';
 
 export default function DeploymentDetailsAWS() {
     const { provider, date } = useParams();
@@ -13,6 +14,10 @@ export default function DeploymentDetailsAWS() {
     const [newEntry, setNewEntry] = useState({});
     const [currentService, setCurrentService] = useState('');
     const [editIndex, setEditIndex] = useState(null);
+
+    // Okta Auth Code - Need to refactor this later to be called from App.jsx
+    const { authState } = useOktaAuth();
+    //const userName = authState.isAuthenticated ? authState.idToken.claims.name : '';
 
     useEffect(() => {
         fetch(`https://62xa9k0qje.execute-api.us-east-1.amazonaws.com/dev/deploymentroster/details?date=${date}&provider=${provider}`)
@@ -179,6 +184,12 @@ export default function DeploymentDetailsAWS() {
         }));
     };
 
+    const renderTooltip = (props) => (
+        <Tooltip id="button-tooltip" {...props}>
+            Please log in to perform this action.
+        </Tooltip>
+    );
+
     return (
         <>
             <Container fluid className="mt-4">
@@ -234,14 +245,49 @@ export default function DeploymentDetailsAWS() {
                                     <td>{lambda.environment_variable}</td>
                                     <td>{lambda.comments}</td>
                                     <td>
-                                        <Button variant="warning" onClick={() => handleEdit('lambda', index)}>Edit</Button>{' '}
-                                        <Button variant="danger" onClick={() => handleDelete('lambda', index)}>Delete</Button>
+                                        <OverlayTrigger
+                                            placement="top"
+                                            overlay={renderTooltip}
+                                        >
+                                            <span className="d-inline-block">
+                                                <Button
+                                                    variant="warning"
+                                                    onClick={() => handleEdit('lambda', index)}
+                                                    disabled={!authState.isAuthenticated}
+                                                    style={!authState.isAuthenticated ? { pointerEvents: 'none' } : {}}
+                                                >
+                                                    Edit
+                                                </Button>{' '}
+                                                <Button
+                                                    variant="danger"
+                                                    onClick={() => handleDelete('lambda', index)}
+                                                    disabled={!authState.isAuthenticated}
+                                                    style={!authState.isAuthenticated ? { pointerEvents: 'none' } : {}}
+                                                >
+                                                    Delete
+                                                </Button>
+                                            </span>
+                                        </OverlayTrigger>
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
                     </Table>
-                    <Button variant="primary" onClick={() => handleAddRow('lambda')}>Add Lambda Function</Button>
+                    <OverlayTrigger
+                        placement="top"
+                        overlay={renderTooltip}
+                    >
+                        <span className="d-inline-block">
+                            <Button
+                                variant="primary"
+                                onClick={() => handleAddRow('lambda')}
+                                disabled={!authState.isAuthenticated}
+                                style={!authState.isAuthenticated ? { pointerEvents: 'none' } : {}}
+                            >
+                                Add Lambda Function
+                            </Button>
+                        </span>
+                    </OverlayTrigger>
                 </Container>
 
                 <Container fluid className="mt-4">
@@ -264,14 +310,49 @@ export default function DeploymentDetailsAWS() {
                                     <td>{flow.new}</td>
                                     <td>{flow.bitbucket_link}</td>
                                     <td>
-                                        <Button variant="warning" onClick={() => handleEdit('contact_flows', index)}>Edit</Button>{' '}
-                                        <Button variant="danger" onClick={() => handleDelete('contact_flows', index)}>Delete</Button>
+                                        <OverlayTrigger
+                                            placement="top"
+                                            overlay={renderTooltip}
+                                        >
+                                            <span className="d-inline-block">
+                                                <Button
+                                                    variant="warning"
+                                                    onClick={() => handleEdit('contact_flows', index)}
+                                                    disabled={!authState.isAuthenticated}
+                                                    style={!authState.isAuthenticated ? { pointerEvents: 'none' } : {}}
+                                                >
+                                                    Edit
+                                                </Button>{' '}
+                                                <Button
+                                                    variant="danger"
+                                                    onClick={() => handleDelete('contact_flows', index)}
+                                                    disabled={!authState.isAuthenticated}
+                                                    style={!authState.isAuthenticated ? { pointerEvents: 'none' } : {}}
+                                                >
+                                                    Delete
+                                                </Button>
+                                            </span>
+                                        </OverlayTrigger>
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
                     </Table>
-                    <Button variant="primary" onClick={() => handleAddRow('contact_flows')}>Add Contact Flow</Button>
+                    <OverlayTrigger
+                        placement="top"
+                        overlay={renderTooltip}
+                    >
+                        <span className="d-inline-block">
+                            <Button
+                                variant="primary"
+                                onClick={() => handleAddRow('contact_flows')}
+                                disabled={!authState.isAuthenticated}
+                                style={!authState.isAuthenticated ? { pointerEvents: 'none' } : {}}
+                            >
+                                Add Contact Flow
+                            </Button>
+                        </span>
+                    </OverlayTrigger>
                 </Container>
 
                 <Container fluid className="mt-4">
@@ -302,14 +383,49 @@ export default function DeploymentDetailsAWS() {
                                     <td>{api.scrum_team}</td>
                                     <td>{api.api_type}</td>
                                     <td>
-                                        <Button variant="warning" onClick={() => handleEdit('api_gateway', index)}>Edit</Button>{' '}
-                                        <Button variant="danger" onClick={() => handleDelete('api_gateway', index)}>Delete</Button>
+                                        <OverlayTrigger
+                                            placement="top"
+                                            overlay={renderTooltip}
+                                        >
+                                            <span className="d-inline-block">
+                                                <Button
+                                                    variant="warning"
+                                                    onClick={() => handleEdit('api_gateway', index)}
+                                                    disabled={!authState.isAuthenticated}
+                                                    style={!authState.isAuthenticated ? { pointerEvents: 'none' } : {}}
+                                                >
+                                                    Edit
+                                                </Button>{' '}
+                                                <Button
+                                                    variant="danger"
+                                                    onClick={() => handleDelete('api_gateway', index)}
+                                                    disabled={!authState.isAuthenticated}
+                                                    style={!authState.isAuthenticated ? { pointerEvents: 'none' } : {}}
+                                                >
+                                                    Delete
+                                                </Button>
+                                            </span>
+                                        </OverlayTrigger>
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
                     </Table>
-                    <Button variant="primary" onClick={() => handleAddRow('api_gateway')}>Add API Gateway</Button>
+                    <OverlayTrigger
+                        placement="top"
+                        overlay={renderTooltip}
+                    >
+                        <span className="d-inline-block">
+                            <Button
+                                variant="primary"
+                                onClick={() => handleAddRow('api_gateway')}
+                                disabled={!authState.isAuthenticated}
+                                style={!authState.isAuthenticated ? { pointerEvents: 'none' } : {}}
+                            >
+                                Add API Gateway
+                            </Button>
+                        </span>
+                    </OverlayTrigger>
                 </Container>
 
                 <Modal show={showModal} onHide={() => setShowModal(false)}>

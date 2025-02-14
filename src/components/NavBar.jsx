@@ -1,12 +1,19 @@
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
 import { useOktaAuth } from '@okta/okta-react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function NavBar() {
     const { authState, oktaAuth } = useOktaAuth();
-    const login = async () => oktaAuth.signInWithRedirect();
-    const logout = async () => oktaAuth.signOut();
+    const location = useLocation();
+    const navigate = useNavigate();
+    const login = async () => oktaAuth.signInWithRedirect({ originalUri: location.pathname });
+    const logout = async () => {
+        await oktaAuth.signOut();
+        if (location.pathname.startsWith('/new')) {
+            navigate('/');
+        }
+    };
 
     if (!authState) {
         return null;
@@ -29,15 +36,8 @@ export default function NavBar() {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
                         <Nav.Link href="/deploymentroster">Deployment Roster</Nav.Link>
-                        <NavDropdown title="Deployment Roster" id="basic-nav-dropdown" menuVariant="dark">
-                            <NavDropdown.Item className="bg-dark text-white" href="#action/3.1">AWS</NavDropdown.Item>
-                            <NavDropdown.Item className="bg-dark text-white" href="#action/3.2">GC</NavDropdown.Item>
-                            <NavDropdown.Item className="bg-dark text-white" href="#action/3.3">Something</NavDropdown.Item>
-                            <NavDropdown.Divider />
-                            <NavDropdown.Item className="bg-dark text-white" href="#action/3.4">Separated link</NavDropdown.Item>
-                        </NavDropdown>
                         {authState.isAuthenticated && (
-                            <Nav.Link href="/new">Link</Nav.Link>
+                            <Nav.Link href="/new">DevOps Tools</Nav.Link>
                         )}
                     </Nav>
                     <Nav className="ms-auto">
