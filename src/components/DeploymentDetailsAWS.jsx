@@ -17,7 +17,7 @@ export default function DeploymentDetailsAWS() {
 
     // Okta Auth Code - Need to refactor this later to be called from App.jsx
     const { authState } = useOktaAuth();
-    //const userName = authState.isAuthenticated ? authState.idToken.claims.name : '';
+    const userName = authState.isAuthenticated ? authState.idToken.claims.name : '';
 
     useEffect(() => {
         fetch(`https://62xa9k0qje.execute-api.us-east-1.amazonaws.com/dev/deploymentroster/details?date=${date}&provider=${provider}`)
@@ -51,7 +51,7 @@ export default function DeploymentDetailsAWS() {
     };
 
     const handleDelete = (type, index) => {
-        const itemToDelete = data[type][index];
+        const itemToDelete = { ...data[type][index], userName };
 
         fetch(`https://62xa9k0qje.execute-api.us-east-1.amazonaws.com/dev/deploymentroster?date=${date}&provider=${provider}&service=${type}`, {
             method: 'PUT',
@@ -68,10 +68,11 @@ export default function DeploymentDetailsAWS() {
             })
             .then((responseData) => {
                 console.log('Success:', responseData);
-                // Update the state to remove the deleted item
+                // Update the state to remove the deleted item and update last_updated_usr
                 setData(prevData => ({
                     ...prevData,
-                    [type]: prevData[type].filter((_, i) => i !== index)
+                    [type]: prevData[type].filter((_, i) => i !== index),
+                    last_updated_usr: userName
                 }));
             })
             .catch((error) => {
@@ -109,6 +110,8 @@ export default function DeploymentDetailsAWS() {
             return acc;
         }, {});
 
+        postData.userName = userName;
+
         if (editIndex === null) {
             // Add new entry
             postData.id = data[currentService].length + 1;
@@ -130,10 +133,11 @@ export default function DeploymentDetailsAWS() {
                     console.log('Success:', data);
                     setShowModal(false);
                     setNewEntry({});
-                    // Optionally, refresh the data to show the new entry
+                    // Optionally, refresh the data to show the new entry and update last_updated_usr
                     setData(prevData => ({
                         ...prevData,
-                        [currentService]: [...prevData[currentService], postData]
+                        [currentService]: [...prevData[currentService], postData],
+                        last_updated_usr: userName
                     }));
                 })
                 .catch((error) => {
@@ -160,13 +164,14 @@ export default function DeploymentDetailsAWS() {
                     console.log('Success:', data);
                     setShowModal(false);
                     setNewEntry({});
-                    // Optionally, refresh the data to show the edited entry
+                    // Optionally, refresh the data to show the edited entry and update last_updated_usr
                     setData(prevData => {
                         const updatedService = [...prevData[currentService]];
                         updatedService[editIndex] = postData;
                         return {
                             ...prevData,
-                            [currentService]: updatedService
+                            [currentService]: updatedService,
+                            last_updated_usr: userName
                         };
                     });
                 })
@@ -227,6 +232,7 @@ export default function DeploymentDetailsAWS() {
                                 <th>Owner</th>
                                 <th>Scrum Team</th>
                                 <th>Runtime</th>
+                                <th>Role</th>
                                 <th>Layers</th>
                                 <th>Environment Variable</th>
                                 <th>Comments</th>
@@ -240,6 +246,7 @@ export default function DeploymentDetailsAWS() {
                                     <td>{lambda.application}</td>
                                     <td>{lambda.owner}</td>
                                     <td>{lambda.scrum_team}</td>
+                                    <td>{lambda.role}</td>
                                     <td>{lambda.runtime}</td>
                                     <td>{lambda.layers}</td>
                                     <td>{lambda.environment_variable}</td>
