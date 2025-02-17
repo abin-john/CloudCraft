@@ -1,8 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { Container, Table, Button, Modal, Form, Spinner, Alert, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { FaPlus, FaEdit, FaTrash } from 'react-icons/fa';
-import { BsPlus } from 'react-icons/bs';
+import { Container, Table, Button, Form, Spinner, Alert, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { FaPlus, FaEdit, FaTrash, FaSave, FaTimes } from 'react-icons/fa';
 import { useOktaAuth } from '@okta/okta-react';
 
 export default function DeploymentDetailsAWS() {
@@ -10,12 +9,9 @@ export default function DeploymentDetailsAWS() {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [showModal, setShowModal] = useState(false);
-    const [modalTitle, setModalTitle] = useState('');
-    const [modalFields, setModalFields] = useState([]);
+    const [editingRow, setEditingRow] = useState({ type: null, index: null });
     const [newEntry, setNewEntry] = useState({});
     const [currentService, setCurrentService] = useState('');
-    const [editIndex, setEditIndex] = useState(null);
 
     // Okta Auth Code - Need to refactor this later to be called from App.jsx
     const { authState } = useOktaAuth();
@@ -51,11 +47,8 @@ export default function DeploymentDetailsAWS() {
 
     const handleEdit = (type, index) => {
         setCurrentService(type);
-        setEditIndex(index);
+        setEditingRow({ type, index });
         setNewEntry(data[type][index]);
-        setModalTitle(`Edit ${type.replace('_', ' ')}`);
-        setModalFields(Object.keys(data[type][index]).map(key => key.replace(/_/g, ' ')));
-        setShowModal(true);
     };
 
     const handleDelete = (type, index) => {
@@ -89,38 +82,15 @@ export default function DeploymentDetailsAWS() {
     };
 
     const handleAddRow = (type) => {
-        let fields = [];
-        switch (type) {
-            case 'lambda':
-                fields = ['Function Name', 'Application', 'Owner', 'Scrum Team', 'Runtime', 'Role', 'Layers', 'Environment Variable', 'Comments'];
-                break;
-            case 'contact_flows':
-                fields = ['Name', 'Type', 'New', 'Bitbucket Link'];
-                break;
-            case 'api_gateway':
-                fields = ['API Gateway Name', 'Route', 'Method', 'Authorization', 'Lambda Function', 'Owner', 'Scrum Team', 'API Type'];
-                break;
-            default:
-                break;
-        }
-        setModalTitle(`Add ${type.replace('_', ' ')}`);
-        setModalFields(fields);
-        setNewEntry({});
         setCurrentService(type);
-        setEditIndex(null);
-        setShowModal(true);
+        setEditingRow({ type, index: data[type].length });
+        setNewEntry({});
     };
 
     const handleSave = () => {
-        const postData = modalFields.reduce((acc, field) => {
-            const key = field.toLowerCase().replace(/ /g, '_');
-            acc[key] = newEntry[key] || '';
-            return acc;
-        }, {});
+        const postData = { ...newEntry, userName };
 
-        postData.userName = userName;
-
-        if (editIndex === null) {
+        if (editingRow.index === data[currentService].length) {
             // Add new entry
             postData.id = data[currentService].length + 1;
 
@@ -139,7 +109,7 @@ export default function DeploymentDetailsAWS() {
                 })
                 .then((data) => {
                     console.log('Success:', data);
-                    setShowModal(false);
+                    setEditingRow({ type: null, index: null });
                     setNewEntry({});
                     // Optionally, refresh the data to show the new entry and update last_updated_usr
                     setData(prevData => ({
@@ -153,7 +123,7 @@ export default function DeploymentDetailsAWS() {
                 });
         } else {
             // Edit existing entry
-            postData.id = data[currentService][editIndex].id;
+            postData.id = data[currentService][editingRow.index].id;
 
             fetch(`https://62xa9k0qje.execute-api.us-east-1.amazonaws.com/dev/deploymentroster?date=${date}&provider=${provider}&service=${currentService}`, {
                 method: 'PATCH',
@@ -170,12 +140,12 @@ export default function DeploymentDetailsAWS() {
                 })
                 .then((data) => {
                     console.log('Success:', data);
-                    setShowModal(false);
+                    setEditingRow({ type: null, index: null });
                     setNewEntry({});
                     // Optionally, refresh the data to show the edited entry and update last_updated_usr
                     setData(prevData => {
                         const updatedService = [...prevData[currentService]];
-                        updatedService[editIndex] = postData;
+                        updatedService[editingRow.index] = postData;
                         return {
                             ...prevData,
                             [currentService]: updatedService,
@@ -250,168 +220,146 @@ export default function DeploymentDetailsAWS() {
                         <tbody>
                             {data.lambda.map((lambda, index) => (
                                 <tr key={index}>
-                                    <td>{lambda.function_name}</td>
-                                    <td>{lambda.application}</td>
-                                    <td>{lambda.owner}</td>
-                                    <td>{lambda.scrum_team}</td>
-                                    <td>{lambda.role}</td>
-                                    <td>{lambda.runtime}</td>
-                                    <td>{lambda.layers}</td>
-                                    <td>{lambda.environment_variable}</td>
-                                    <td>{lambda.comments}</td>
-                                    <td>
-                                        {authState.isAuthenticated ? (
-                                            <>
-                                                <Button
-                                                    variant="link"
-                                                    onClick={() => handleEdit('lambda', index)}
-                                                >
-                                                    <FaEdit style={{ fontSize: '1.2em', color: 'black' }} />
-                                                </Button>
-                                                <Button
-                                                    variant="link"
-                                                    onClick={() => handleDelete('lambda', index)}
-                                                >
-                                                    <FaTrash style={{ fontSize: '1.2em', color: 'black' }} />
-                                                </Button>
-                                            </>
-                                        ) : (
-                                            <OverlayTrigger
-                                                placement="top"
-                                                overlay={renderTooltip}
-                                            >
-                                                <span className="d-inline-block">
-                                                    <Button
-                                                        variant="link"
-                                                        onClick={() => handleEdit('lambda', index)}
-                                                        disabled
-                                                    >
-                                                        <FaEdit style={{ fontSize: '1.2em', color: 'black' }} />
-                                                    </Button>
-                                                    <Button
-                                                        variant="link"
-                                                        onClick={() => handleDelete('lambda', index)}
-                                                        disabled
-                                                    >
-                                                        <FaTrash style={{ fontSize: '1.2em', color: 'black' }} />
-                                                    </Button>
-                                                </span>
-                                            </OverlayTrigger>
-                                        )}
-                                    </td>
+                                    {editingRow.type === 'lambda' && editingRow.index === index ? (
+                                        <>
+                                            <td><Form.Control type="text" name="function_name" value={newEntry.function_name || ''} onChange={handleChange} /></td>
+                                            <td><Form.Control type="text" name="application" value={newEntry.application || ''} onChange={handleChange} /></td>
+                                            <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                            <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
+                                            <td><Form.Control type="text" name="runtime" value={newEntry.runtime || ''} onChange={handleChange} /></td>
+                                            <td><Form.Control type="text" name="role" value={newEntry.role || ''} onChange={handleChange} /></td>
+                                            <td><Form.Control type="text" name="layers" value={newEntry.layers || ''} onChange={handleChange} /></td>
+                                            <td><Form.Control type="text" name="environment_variable" value={newEntry.environment_variable || ''} onChange={handleChange} /></td>
+                                            <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
+                                            <td>
+                                                <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                <Button variant="link" onClick={() => setEditingRow(null)}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                            </td>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <td>{lambda.function_name}</td>
+                                            <td>{lambda.application}</td>
+                                            <td>{lambda.owner}</td>
+                                            <td>{lambda.scrum_team}</td>
+                                            <td>{lambda.runtime}</td>
+                                            <td>{lambda.role}</td>
+                                            <td>{lambda.layers}</td>
+                                            <td>{lambda.environment_variable}</td>
+                                            <td>{lambda.comments}</td>
+                                            <td>
+                                                {authState.isAuthenticated ? (
+                                                    <>
+                                                        <Button variant="link" onClick={() => handleEdit('lambda', index)}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                        <Button variant="link" onClick={() => handleDelete('lambda', index)}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                    </>
+                                                ) : (
+                                                    <OverlayTrigger placement="top" overlay={renderTooltip}>
+                                                        <span className="d-inline-block">
+                                                            <Button variant="link" onClick={() => handleEdit('lambda', index)} disabled><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                            <Button variant="link" onClick={() => handleDelete('lambda', index)} disabled><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                        </span>
+                                                    </OverlayTrigger>
+                                                )}
+                                            </td>
+                                        </>
+                                    )}
                                 </tr>
                             ))}
+                            {editingRow.type === 'lambda' && editingRow.index === data.lambda.length && (
+                                <tr>
+                                    <td><Form.Control type="text" name="function_name" value={newEntry.function_name || ''} onChange={handleChange} /></td>
+                                    <td><Form.Control type="text" name="application" value={newEntry.application || ''} onChange={handleChange} /></td>
+                                    <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                    <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
+                                    <td><Form.Control type="text" name="runtime" value={newEntry.runtime || ''} onChange={handleChange} /></td>
+                                    <td><Form.Control type="text" name="role" value={newEntry.role || ''} onChange={handleChange} /></td>
+                                    <td><Form.Control type="text" name="layers" value={newEntry.layers || ''} onChange={handleChange} /></td>
+                                    <td><Form.Control type="text" name="environment_variable" value={newEntry.environment_variable || ''} onChange={handleChange} /></td>
+                                    <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
+                                    <td>
+                                        <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                        <Button variant="link" onClick={() => setEditingRow(null)}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                    </td>
+                                </tr>
+                            )}
                         </tbody>
-                        {authState.isAuthenticated ? (
-                            <Button
-                                variant="link"
-                                onClick={() => handleAddRow('contact_flows')}
-                            >
-                                <FaPlus style={{ fontSize: '1.2em', color: 'black' }} />
-                            </Button>
-                        ) : (
-                            <OverlayTrigger
-                                placement="top"
-                                overlay={renderTooltip}
-                            >
-                                <span className="d-inline-block">
-                                    <Button
-                                        variant="dark"
-                                        onClick={() => handleAddRow('contact_flows')}
-                                        disabled
-                                    >
-                                        <BsPlus style={{ fontSize: '1.3em', fontWeight: 'bold', color: 'white' }} />
-                                    </Button>
-                                </span>
-                            </OverlayTrigger>
+                        {authState.isAuthenticated && (
+                            <Button variant="link" onClick={() => handleAddRow('lambda')}><FaPlus style={{ fontSize: '1.2em', color: 'black' }} /></Button>
                         )}
                     </Table>
                 </Container>
 
                 <Container fluid className="mt-4">
-                    <h4>Contact Flows</h4>
+                    <h3>Contact Flows</h3>
                     <Table responsive hover>
-                        <thead>
+                        <thead className="bg-primary text-white">
                             <tr>
-                                <th>Name</th>
-                                <th>Type</th>
-                                <th>New</th>
-                                <th>Bitbucket Link</th>
+                                <th>Flow Name</th>
+                                <th>Application</th>
+                                <th>Owner</th>
+                                <th>Scrum Team</th>
+                                <th>Comments</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {data.contact_flows.map((flow, index) => (
                                 <tr key={index}>
-                                    <td>{flow.name}</td>
-                                    <td>{flow.type}</td>
-                                    <td>{flow.new}</td>
-                                    <td>{flow.bitbucket_link}</td>
-                                    <td>
-                                        {authState.isAuthenticated ? (
-                                            <>
-                                                <Button
-                                                    variant="link"
-                                                    onClick={() => handleEdit('contact_flows', index)}
-                                                >
-                                                    <FaEdit style={{ fontSize: '1.2em', color: 'black' }} />
-                                                </Button>
-                                                <Button
-                                                    variant="link"
-                                                    onClick={() => handleDelete('contact_flows', index)}
-                                                >
-                                                    <FaTrash style={{ fontSize: '1.2em', color: 'black' }} />
-                                                </Button>
-                                            </>
-                                        ) : (
-                                            <OverlayTrigger
-                                                placement="top"
-                                                overlay={renderTooltip}
-                                            >
-                                                <span className="d-inline-block">
-                                                    <Button
-                                                        variant="link"
-                                                        onClick={() => handleEdit('contact_flows', index)}
-                                                        disabled
-                                                    >
-                                                        <FaEdit style={{ fontSize: '1.2em', color: 'black' }} />
-                                                    </Button>
-                                                    <Button
-                                                        variant="link"
-                                                        onClick={() => handleDelete('contact_flows', index)}
-                                                        disabled
-                                                    >
-                                                        <FaTrash style={{ fontSize: '1.2em', color: 'black' }} />
-                                                    </Button>
-                                                </span>
-                                            </OverlayTrigger>
-                                        )}
-                                    </td>
+                                    {editingRow.type === 'contact_flows' && editingRow.index === index ? (
+                                        <>
+                                            <td><Form.Control type="text" name="flow_name" value={newEntry.flow_name || ''} onChange={handleChange} /></td>
+                                            <td><Form.Control type="text" name="application" value={newEntry.application || ''} onChange={handleChange} /></td>
+                                            <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                            <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
+                                            <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
+                                            <td>
+                                                <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                <Button variant="link" onClick={() => setEditingRow(null)}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                            </td>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <td>{flow.flow_name}</td>
+                                            <td>{flow.application}</td>
+                                            <td>{flow.owner}</td>
+                                            <td>{flow.scrum_team}</td>
+                                            <td>{flow.comments}</td>
+                                            <td>
+                                                {authState.isAuthenticated ? (
+                                                    <>
+                                                        <Button variant="link" onClick={() => handleEdit('contact_flows', index)}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                        <Button variant="link" onClick={() => handleDelete('contact_flows', index)}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                    </>
+                                                ) : (
+                                                    <OverlayTrigger placement="top" overlay={renderTooltip}>
+                                                        <span className="d-inline-block">
+                                                            <Button variant="link" onClick={() => handleEdit('contact_flows', index)} disabled><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                            <Button variant="link" onClick={() => handleDelete('contact_flows', index)} disabled><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                        </span>
+                                                    </OverlayTrigger>
+                                                )}
+                                            </td>
+                                        </>
+                                    )}
                                 </tr>
                             ))}
+                            {editingRow.type === 'contact_flows' && editingRow.index === data.contact_flows.length && (
+                                <tr>
+                                    <td><Form.Control type="text" name="flow_name" value={newEntry.flow_name || ''} onChange={handleChange} /></td>
+                                    <td><Form.Control type="text" name="application" value={newEntry.application || ''} onChange={handleChange} /></td>
+                                    <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                    <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
+                                    <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
+                                    <td>
+                                        <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                        <Button variant="link" onClick={() => setEditingRow(null)}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                    </td>
+                                </tr>
+                            )}
                         </tbody>
-                        {authState.isAuthenticated ? (
-                            <Button
-                                variant="link"
-                                onClick={() => handleAddRow('contact_flows')}
-                            >
-                                <FaPlus style={{ fontSize: '1.2em', color: 'black' }} />
-                            </Button>
-                        ) : (
-                            <OverlayTrigger
-                                placement="top"
-                                overlay={renderTooltip}
-                            >
-                                <span className="d-inline-block">
-                                    <Button
-                                        variant="dark"
-                                        onClick={() => handleAddRow('contact_flows')}
-                                        disabled
-                                    >
-                                        <BsPlus style={{ fontSize: '1.3em', fontWeight: 'bold', color: 'white' }} />
-                                    </Button>
-                                </span>
-                            </OverlayTrigger>
+                        {authState.isAuthenticated && (
+                            <Button variant="link" onClick={() => handleAddRow('contact_flows')}><FaPlus style={{ fontSize: '1.2em', color: 'black' }} /></Button>
                         )}
                     </Table>
                 </Container>
@@ -435,112 +383,72 @@ export default function DeploymentDetailsAWS() {
                         <tbody>
                             {data.api_gateway.map((api, index) => (
                                 <tr key={index}>
-                                    <td>{api.api_gateway_name}</td>
-                                    <td>{api.route}</td>
-                                    <td>{api.method}</td>
-                                    <td>{api.authorization}</td>
-                                    <td>{api.lambda_function}</td>
-                                    <td>{api.owner}</td>
-                                    <td>{api.scrum_team}</td>
-                                    <td>{api.api_type}</td>
-                                    <td>
-                                        {authState.isAuthenticated ? (
-                                            <>
-                                                <Button
-                                                    variant="link"
-                                                    onClick={() => handleEdit('api_gateway', index)}
-                                                >
-                                                    <FaEdit style={{ fontSize: '1.2em', color: 'black' }} />
-                                                </Button>
-                                                <Button
-                                                    variant="link"
-                                                    onClick={() => handleDelete('api_gateway', index)}
-                                                >
-                                                    <FaTrash style={{ fontSize: '1.2em', color: 'black' }} />
-                                                </Button>
-                                            </>
-                                        ) : (
-                                            <OverlayTrigger
-                                                placement="top"
-                                                overlay={renderTooltip}
-                                            >
-                                                <span className="d-inline-block">
-                                                    <Button
-                                                        variant="link"
-                                                        onClick={() => handleEdit('api_gateway', index)}
-                                                        disabled
-                                                    >
-                                                        <FaEdit style={{ fontSize: '1.2em', color: 'black' }} />
-                                                    </Button>
-                                                    <Button
-                                                        variant="link"
-                                                        onClick={() => handleDelete('contact_flows', index)}
-                                                        disabled
-                                                    >
-                                                        <FaTrash style={{ fontSize: '1.2em', color: 'black' }} />
-                                                    </Button>
-                                                </span>
-                                            </OverlayTrigger>
-                                        )}
-                                    </td>
+                                    {editingRow.type === 'api_gateway' && editingRow.index === index ? (
+                                        <>
+                                            <td><Form.Control type="text" name="api_gateway_name" value={newEntry.api_gateway_name || ''} onChange={handleChange} /></td>
+                                            <td><Form.Control type="text" name="route" value={newEntry.route || ''} onChange={handleChange} /></td>
+                                            <td><Form.Control type="text" name="method" value={newEntry.method || ''} onChange={handleChange} /></td>
+                                            <td><Form.Control type="text" name="authorization" value={newEntry.authorization || ''} onChange={handleChange} /></td>
+                                            <td><Form.Control type="text" name="lambda_function" value={newEntry.lambda_function || ''} onChange={handleChange} /></td>
+                                            <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                            <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
+                                            <td><Form.Control type="text" name="api_type" value={newEntry.api_type || ''} onChange={handleChange} /></td>
+                                            <td>
+                                                <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                <Button variant="link" onClick={() => setEditingRow(null)}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                            </td>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <td>{api.api_gateway_name}</td>
+                                            <td>{api.route}</td>
+                                            <td>{api.method}</td>
+                                            <td>{api.authorization}</td>
+                                            <td>{api.lambda_function}</td>
+                                            <td>{api.owner}</td>
+                                            <td>{api.scrum_team}</td>
+                                            <td>{api.api_type}</td>
+                                            <td>
+                                                {authState.isAuthenticated ? (
+                                                    <>
+                                                        <Button variant="link" onClick={() => handleEdit('api_gateway', index)}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                        <Button variant="link" onClick={() => handleDelete('api_gateway', index)}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                    </>
+                                                ) : (
+                                                    <OverlayTrigger placement="top" overlay={renderTooltip}>
+                                                        <span className="d-inline-block">
+                                                            <Button variant="link" onClick={() => handleEdit('api_gateway', index)} disabled><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                            <Button variant="link" onClick={() => handleDelete('api_gateway', index)} disabled><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                        </span>
+                                                    </OverlayTrigger>
+                                                )}
+                                            </td>
+                                        </>
+                                    )}
                                 </tr>
                             ))}
+                            {editingRow.type === 'api_gateway' && editingRow.index === data.api_gateway.length && (
+                                <tr>
+                                    <td><Form.Control type="text" name="api_gateway_name" value={newEntry.api_gateway_name || ''} onChange={handleChange} /></td>
+                                    <td><Form.Control type="text" name="route" value={newEntry.route || ''} onChange={handleChange} /></td>
+                                    <td><Form.Control type="text" name="method" value={newEntry.method || ''} onChange={handleChange} /></td>
+                                    <td><Form.Control type="text" name="authorization" value={newEntry.authorization || ''} onChange={handleChange} /></td>
+                                    <td><Form.Control type="text" name="lambda_function" value={newEntry.lambda_function || ''} onChange={handleChange} /></td>
+                                    <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                    <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
+                                    <td><Form.Control type="text" name="api_type" value={newEntry.api_type || ''} onChange={handleChange} /></td>
+                                    <td>
+                                        <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                        <Button variant="link" onClick={() => setEditingRow(null)}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                    </td>
+                                </tr>
+                            )}
                         </tbody>
-                        {authState.isAuthenticated ? (
-                            <Button
-                                variant="link"
-                                onClick={() => handleAddRow('api_gateway')}
-                            >
-                                <FaPlus style={{ fontSize: '1.2em', color: 'black' }} />
-                            </Button>
-                        ) : (
-                            <OverlayTrigger
-                                placement="top"
-                                overlay={renderTooltip}
-                            >
-                                <span className="d-inline-block">
-                                    <Button
-                                        variant="dark"
-                                        onClick={() => handleAddRow('api_gateway')}
-                                        disabled
-                                    >
-                                        <BsPlus style={{ fontSize: '1.3em', fontWeight: 'bold', color: 'white' }} />
-                                    </Button>
-                                </span>
-                            </OverlayTrigger>
+                        {authState.isAuthenticated && (
+                            <Button variant="link" onClick={() => handleAddRow('api_gateway')}><FaPlus style={{ fontSize: '1.2em', color: 'black' }} /></Button>
                         )}
                     </Table>
                 </Container>
-
-                <Modal show={showModal} onHide={() => setShowModal(false)}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>{modalTitle}</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <Form>
-                            {modalFields.map((field, index) => (
-                                <Form.Group controlId={`form${field.replace(' ', '')}`} key={index}>
-                                    <Form.Label>{field}</Form.Label>
-                                    <Form.Control
-                                        as={field === 'Environment Variable' || field === 'Comments' ? 'textarea' : 'input'}
-                                        rows={field === 'Environment Variable' || field === 'Comments' ? 3 : undefined}
-                                        name={field.toLowerCase().replace(/ /g, '_')}
-                                        value={newEntry[field.toLowerCase().replace(/ /g, '_')] || ''}
-                                        onChange={handleChange}
-                                    />
-                                </Form.Group>
-                            ))}
-                        </Form>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={() => setShowModal(false)}>
-                            Close
-                        </Button>
-                        <Button variant="primary" onClick={handleSave}>
-                            Save Changes
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
             </Container>
         </>
     );
