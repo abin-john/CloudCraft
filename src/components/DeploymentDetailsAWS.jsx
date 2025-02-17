@@ -447,6 +447,522 @@ export default function DeploymentDetailsAWS() {
                             )}
                         </Table>
                     </Tab >
+                    <Tab eventKey="dynamo_db_script" title="Dynamo DB Entries">
+                        <Table responsive hover>
+                            <thead className="bg-primary text-white">
+                                <tr>
+                                    <th>Script Path</th>
+                                    <th>Scrum Team</th>
+                                    <th>Owner</th>
+                                    <th>Comments</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {data.dynamo_db_script.map((entry, index) => (
+                                    <tr key={index}>
+                                        {editingRow.type === 'dynamo_db_script' && editingRow.index === index ? (
+                                            <>
+                                                <td><Form.Control type="text" name="script_path" value={newEntry.script_path || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
+                                                <td>
+                                                    <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                    <Button variant="link" onClick={() => setEditingRow({ type: null, index: null })}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                </td>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <td>{entry.script_path}</td>
+                                                <td>{entry.scrum_team}</td>
+                                                <td>{entry.owner}</td>
+                                                <td>{entry.comments}</td>
+                                                <td>
+                                                    {authState.isAuthenticated ? (
+                                                        <>
+                                                            <Button variant="link" onClick={() => handleEdit('dynamo_db_script', index)}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                            <Button variant="link" onClick={() => handleDelete('dynamo_db_script', index)}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                        </>
+                                                    ) : (
+                                                        <OverlayTrigger placement="top" overlay={renderTooltip}>
+                                                            <span className="d-inline-block">
+                                                                <Button variant="link" onClick={() => handleEdit('dynamo_db_script', index)} disabled><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                                <Button variant="link" onClick={() => handleDelete('dynamo_db_script', index)} disabled><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                            </span>
+                                                        </OverlayTrigger>
+                                                    )}
+                                                </td>
+                                            </>
+                                        )}
+                                    </tr>
+                                ))}
+                                {editingRow.type === 'dynamo_db_script' && editingRow.index === data.dynamo_db_script.length && (
+                                    <tr>
+                                        <td><Form.Control type="text" name="script_path" value={newEntry.script_path || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
+                                        <td>
+                                            <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                            <Button variant="link" onClick={() => setEditingRow({ type: null, index: null })}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                            {authState.isAuthenticated && (
+                                <Button variant="link" onClick={() => handleAddRow('dynamo_db_script')}><FaPlus style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                            )}
+                        </Table>
+                    </Tab>
+                    <Tab eventKey="ui" title="UI">
+                        <Table responsive hover>
+                            <thead className="bg-primary text-white">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Application</th>
+                                    <th>Owner</th>
+                                    <th>Bitbucket Repo</th>
+                                    <th>Branch</th>
+                                    <th>CloudFront URL</th>
+                                    <th>Scrum Team</th>
+                                    <th>Comments</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {data.ui.map((ui, index) => (
+                                    <tr key={index}>
+                                        {editingRow.type === 'ui' && editingRow.index === index ? (
+                                            <>
+                                                <td><Form.Control type="text" name="name" value={newEntry.name || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="application" value={newEntry.application || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="bitbucket_repo" value={newEntry.bitbucket_repo || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="branch" value={newEntry.branch || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="cloudfront_url" value={newEntry.cloudfront_url || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
+                                                <td>
+                                                    <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                    <Button variant="link" onClick={() => setEditingRow({ type: null, index: null })}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                </td>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <td>{ui.name}</td>
+                                                <td>{ui.application}</td>
+                                                <td>{ui.owner}</td>
+                                                <td>{ui.bitbucket_repo}</td>
+                                                <td>{ui.branch}</td>
+                                                <td>{ui.cloudfront_url}</td>
+                                                <td>{ui.scrum_team}</td>
+                                                <td>{ui.comments}</td>
+                                                <td>
+                                                    {authState.isAuthenticated ? (
+                                                        <>
+                                                            <Button variant="link" onClick={() => handleEdit('ui', index)}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                            <Button variant="link" onClick={() => handleDelete('ui', index)}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                        </>
+                                                    ) : (
+                                                        <OverlayTrigger placement="top" overlay={renderTooltip}>
+                                                            <span className="d-inline-block">
+                                                                <Button variant="link" onClick={() => handleEdit('ui', index)} disabled><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                                <Button variant="link" onClick={() => handleDelete('ui', index)} disabled><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                            </span>
+                                                        </OverlayTrigger>
+                                                    )}
+                                                </td>
+                                            </>
+                                        )}
+                                    </tr>
+                                ))}
+                                {editingRow.type === 'ui' && editingRow.index === data.ui.length && (
+                                    <tr>
+                                        <td><Form.Control type="text" name="name" value={newEntry.name || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="application" value={newEntry.application || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="bitbucket_repo" value={newEntry.bitbucket_repo || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="branch" value={newEntry.branch || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="cloudfront_url" value={newEntry.cloudfront_url || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
+                                        <td>
+                                            <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                            <Button variant="link" onClick={() => setEditingRow({ type: null, index: null })}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                            {authState.isAuthenticated && (
+                                <Button variant="link" onClick={() => handleAddRow('ui')}><FaPlus style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                            )}
+                        </Table>
+                    </Tab>
+                    <Tab eventKey="event_bridge" title="Event Bridge">
+                        <Table responsive hover>
+                            <thead className="bg-primary text-white">
+                                <tr>
+                                    <th>EB Name (Bus)</th>
+                                    <th>Rule Name</th>
+                                    <th>Type</th>
+                                    <th>Event Pattern</th>
+                                    <th>Targets</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {data.event_bridge.map((eb, index) => (
+                                    <tr key={index}>
+                                        {editingRow.type === 'event_bridge' && editingRow.index === index ? (
+                                            <>
+                                                <td><Form.Control type="text" name="eb_name" value={newEntry.eb_name || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="rule_name" value={newEntry.rule_name || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="type" value={newEntry.type || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="event_pattern" value={newEntry.event_pattern || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="targets" value={newEntry.targets || ''} onChange={handleChange} /></td>
+                                                <td>
+                                                    <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                    <Button variant="link" onClick={() => setEditingRow({ type: null, index: null })}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                </td>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <td>{eb.eb_name}</td>
+                                                <td>{eb.rule_name}</td>
+                                                <td>{eb.type}</td>
+                                                <td>{eb.event_pattern}</td>
+                                                <td>{eb.targets}</td>
+                                                <td>
+                                                    {authState.isAuthenticated ? (
+                                                        <>
+                                                            <Button variant="link" onClick={() => handleEdit('event_bridge', index)}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                            <Button variant="link" onClick={() => handleDelete('event_bridge', index)}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                        </>
+                                                    ) : (
+                                                        <OverlayTrigger placement="top" overlay={renderTooltip}>
+                                                            <span className="d-inline-block">
+                                                                <Button variant="link" onClick={() => handleEdit('event_bridge', index)} disabled><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                                <Button variant="link" onClick={() => handleDelete('event_bridge', index)} disabled><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                            </span>
+                                                        </OverlayTrigger>
+                                                    )}
+                                                </td>
+                                            </>
+                                        )}
+                                    </tr>
+                                ))}
+                                {editingRow.type === 'event_bridge' && editingRow.index === data.event_bridge.length && (
+                                    <tr>
+                                        <td><Form.Control type="text" name="eb_name" value={newEntry.eb_name || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="rule_name" value={newEntry.rule_name || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="type" value={newEntry.type || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="event_pattern" value={newEntry.event_pattern || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="targets" value={newEntry.targets || ''} onChange={handleChange} /></td>
+                                        <td>
+                                            <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                            <Button variant="link" onClick={() => setEditingRow({ type: null, index: null })}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                            {authState.isAuthenticated && (
+                                <Button variant="link" onClick={() => handleAddRow('event_bridge')}><FaPlus style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                            )}
+                        </Table>
+                    </Tab>
+                    <Tab eventKey="iam_role" title="IAM Role">
+                        <Table responsive hover>
+                            <thead className="bg-primary text-white">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Permissions</th>
+                                    <th>Owner</th>
+                                    <th>Application</th>
+                                    <th>Scrum Team</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {data.iam_role.map((role, index) => (
+                                    <tr key={index}>
+                                        {editingRow.type === 'iam_role' && editingRow.index === index ? (
+                                            <>
+                                                <td><Form.Control type="text" name="name" value={newEntry.name || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="permissions" value={newEntry.permissions || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="application" value={newEntry.application || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
+                                                <td>
+                                                    <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                    <Button variant="link" onClick={() => setEditingRow({ type: null, index: null })}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                </td>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <td>{role.name}</td>
+                                                <td>{role.permissions}</td>
+                                                <td>{role.owner}</td>
+                                                <td>{role.application}</td>
+                                                <td>{role.scrum_team}</td>
+                                                <td>
+                                                    {authState.isAuthenticated ? (
+                                                        <>
+                                                            <Button variant="link" onClick={() => handleEdit('iam_role', index)}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                            <Button variant="link" onClick={() => handleDelete('iam_role', index)}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                        </>
+                                                    ) : (
+                                                        <OverlayTrigger placement="top" overlay={renderTooltip}>
+                                                            <span className="d-inline-block">
+                                                                <Button variant="link" onClick={() => handleEdit('iam_role', index)} disabled><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                                <Button variant="link" onClick={() => handleDelete('iam_role', index)} disabled><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                            </span>
+                                                        </OverlayTrigger>
+                                                    )}
+                                                </td>
+                                            </>
+                                        )}
+                                    </tr>
+                                ))}
+                                {editingRow.type === 'iam_role' && editingRow.index === data.iam_role.length && (
+                                    <tr>
+                                        <td><Form.Control type="text" name="name" value={newEntry.name || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="permissions" value={newEntry.permissions || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="application" value={newEntry.application || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
+                                        <td>
+                                            <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                            <Button variant="link" onClick={() => setEditingRow({ type: null, index: null })}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                            {authState.isAuthenticated && (
+                                <Button variant="link" onClick={() => handleAddRow('iam_role')}><FaPlus style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                            )}
+                        </Table>
+                    </Tab>
+                    <Tab eventKey="kds" title="KDS">
+                        <Table responsive hover>
+                            <thead className="bg-primary text-white">
+                                <tr>
+                                    <th>Stream Name</th>
+                                    <th>Application</th>
+                                    <th>Owner</th>
+                                    <th>Comments</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {data.kds.map((stream, index) => (
+                                    <tr key={index}>
+                                        {editingRow.type === 'kds' && editingRow.index === index ? (
+                                            <>
+                                                <td><Form.Control type="text" name="stream_name" value={newEntry.stream_name || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="application" value={newEntry.application || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
+                                                <td>
+                                                    <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                    <Button variant="link" onClick={() => setEditingRow({ type: null, index: null })}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                </td>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <td>{stream.stream_name}</td>
+                                                <td>{stream.application}</td>
+                                                <td>{stream.owner}</td>
+                                                <td>{stream.comments}</td>
+                                                <td>
+                                                    {authState.isAuthenticated ? (
+                                                        <>
+                                                            <Button variant="link" onClick={() => handleEdit('kds', index)}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                            <Button variant="link" onClick={() => handleDelete('kds', index)}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                        </>
+                                                    ) : (
+                                                        <OverlayTrigger placement="top" overlay={renderTooltip}>
+                                                            <span className="d-inline-block">
+                                                                <Button variant="link" onClick={() => handleEdit('kds', index)} disabled><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                                <Button variant="link" onClick={() => handleDelete('kds', index)} disabled><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                            </span>
+                                                        </OverlayTrigger>
+                                                    )}
+                                                </td>
+                                            </>
+                                        )}
+                                    </tr>
+                                ))}
+                                {editingRow.type === 'kds' && editingRow.index === data.kds.length && (
+                                    <tr>
+                                        <td><Form.Control type="text" name="stream_name" value={newEntry.stream_name || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="application" value={newEntry.application || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
+                                        <td>
+                                            <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                            <Button variant="link" onClick={() => setEditingRow({ type: null, index: null })}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                            {authState.isAuthenticated && (
+                                <Button variant="link" onClick={() => handleAddRow('kds')}><FaPlus style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                            )}
+                        </Table>
+                    </Tab>
+                    <Tab eventKey="s3" title="S3">
+                        <Table responsive hover>
+                            <thead className="bg-primary text-white">
+                                <tr>
+                                    <th>Bucket Name</th>
+                                    <th>Application</th>
+                                    <th>Owner</th>
+                                    <th>Scrum Team</th>
+                                    <th>Notifications</th>
+                                    <th>Life Cycle</th>
+                                    <th>Comments</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {data.s3.map((bucket, index) => (
+                                    <tr key={index}>
+                                        {editingRow.type === 's3' && editingRow.index === index ? (
+                                            <>
+                                                <td><Form.Control type="text" name="bucket_name" value={newEntry.bucket_name || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="application" value={newEntry.application || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="notifications" value={newEntry.notifications || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="life_cycle" value={newEntry.life_cycle || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
+                                                <td>
+                                                    <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                    <Button variant="link" onClick={() => setEditingRow({ type: null, index: null })}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                </td>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <td>{bucket.bucket_name}</td>
+                                                <td>{bucket.application}</td>
+                                                <td>{bucket.owner}</td>
+                                                <td>{bucket.scrum_team}</td>
+                                                <td>{bucket.notifications}</td>
+                                                <td>{bucket.life_cycle}</td>
+                                                <td>{bucket.comments}</td>
+                                                <td>
+                                                    {authState.isAuthenticated ? (
+                                                        <>
+                                                            <Button variant="link" onClick={() => handleEdit('s3', index)}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                            <Button variant="link" onClick={() => handleDelete('s3', index)}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                        </>
+                                                    ) : (
+                                                        <OverlayTrigger placement="top" overlay={renderTooltip}>
+                                                            <span className="d-inline-block">
+                                                                <Button variant="link" onClick={() => handleEdit('s3', index)} disabled><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                                <Button variant="link" onClick={() => handleDelete('s3', index)} disabled><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                            </span>
+                                                        </OverlayTrigger>
+                                                    )}
+                                                </td>
+                                            </>
+                                        )}
+                                    </tr>
+                                ))}
+                                {editingRow.type === 's3' && editingRow.index === data.s3.length && (
+                                    <tr>
+                                        <td><Form.Control type="text" name="bucket_name" value={newEntry.bucket_name || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="application" value={newEntry.application || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="notifications" value={newEntry.notifications || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="life_cycle" value={newEntry.life_cycle || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
+                                        <td>
+                                            <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                            <Button variant="link" onClick={() => setEditingRow({ type: null, index: null })}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                            {authState.isAuthenticated && (
+                                <Button variant="link" onClick={() => handleAddRow('s3')}><FaPlus style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                            )}
+                        </Table>
+                    </Tab>
+                    <Tab eventKey="misc" title="Miscellaneous">
+                        <Table responsive hover>
+                            <thead className="bg-primary text-white">
+                                <tr>
+                                    <th>Item Name</th>
+                                    <th>Owner</th>
+                                    <th>Scrum Team</th>
+                                    <th>Details</th>
+                                    <th>Comments</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {data.misc.map((item, index) => (
+                                    <tr key={index}>
+                                        {editingRow.type === 'misc' && editingRow.index === index ? (
+                                            <>
+                                                <td><Form.Control type="text" name="item_name" value={newEntry.item_name || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="details" value={newEntry.details || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
+                                                <td>
+                                                    <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                    <Button variant="link" onClick={() => setEditingRow({ type: null, index: null })}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                </td>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <td>{item.item_name}</td>
+                                                <td>{item.owner}</td>
+                                                <td>{item.scrum_team}</td>
+                                                <td>{item.details}</td>
+                                                <td>{item.comments}</td>
+                                                <td>
+                                                    {authState.isAuthenticated ? (
+                                                        <>
+                                                            <Button variant="link" onClick={() => handleEdit('misc', index)}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                            <Button variant="link" onClick={() => handleDelete('misc', index)}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                        </>
+                                                    ) : (
+                                                        <OverlayTrigger placement="top" overlay={renderTooltip}>
+                                                            <span className="d-inline-block">
+                                                                <Button variant="link" onClick={() => handleEdit('misc', index)} disabled><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                                <Button variant="link" onClick={() => handleDelete('misc', index)} disabled><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                            </span>
+                                                        </OverlayTrigger>
+                                                    )}
+                                                </td>
+                                            </>
+                                        )}
+                                    </tr>
+                                ))}
+                                {editingRow.type === 'misc' && editingRow.index === data.misc.length && (
+                                    <tr>
+                                        <td><Form.Control type="text" name="item_name" value={newEntry.item_name || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="details" value={newEntry.details || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
+                                        <td>
+                                            <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                            <Button variant="link" onClick={() => setEditingRow({ type: null, index: null })}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                            {authState.isAuthenticated && (
+                                <Button variant="link" onClick={() => handleAddRow('misc')}><FaPlus style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                            )}
+                        </Table>
+                    </Tab>
                 </Tabs >
             </Container >
         </>

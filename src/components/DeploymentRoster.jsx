@@ -54,7 +54,7 @@ export default function DeploymentRoster() {
                 {!isDetailsPage && (
                     <>
                         <h2>Deployment Roster</h2>
-                        <Table striped bordered hover>
+                        <Table responsive hover>
                             <thead className="bg-primary text-white">
                                 <tr>
                                     <th>Date</th>
@@ -67,7 +67,7 @@ export default function DeploymentRoster() {
                                 {data.map((item) => (
                                     <tr key={`${item.date}-${item.provider}`}>
                                         <td>
-                                            <Button variant="outline-success" onClick={() => handleRowClick(item)}>
+                                            <Button variant="link" onClick={() => handleRowClick(item)}>
                                                 {item.date}
                                             </Button>
                                         </td>
