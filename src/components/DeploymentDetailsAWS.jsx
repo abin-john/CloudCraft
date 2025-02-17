@@ -1,6 +1,8 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { Container, Table, Button, Modal, Form, Spinner, Alert, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { FaPlus, FaEdit, FaTrash } from 'react-icons/fa';
+import { BsPlus } from 'react-icons/bs';
 import { useOktaAuth } from '@okta/okta-react';
 
 export default function DeploymentDetailsAWS() {
@@ -37,7 +39,13 @@ export default function DeploymentDetailsAWS() {
             });
     }, [date, provider]);
 
-    if (loading) return <Spinner animation="border" role="status"><span className="sr-only">Loading...</span></Spinner>;
+    if (loading) return (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+            <Spinner animation="border" role="status">
+                <span className="visually-hidden">Loading...</span>
+            </Spinner>
+        </div>
+    )
     if (error) return <Alert variant="danger">Error: {error}</Alert>;
     if (!data) return <Container className="mt-4"><p>No details available.</p></Container>;
 
@@ -224,7 +232,7 @@ export default function DeploymentDetailsAWS() {
 
                 <Container fluid className="mt-4">
                     <h3>Lambda Functions</h3>
-                    <Table striped bordered hover>
+                    <Table responsive hover>
                         <thead className="bg-primary text-white">
                             <tr>
                                 <th>Function Name</th>
@@ -255,16 +263,16 @@ export default function DeploymentDetailsAWS() {
                                         {authState.isAuthenticated ? (
                                             <>
                                                 <Button
-                                                    variant="warning"
+                                                    variant="link"
                                                     onClick={() => handleEdit('lambda', index)}
                                                 >
-                                                    Edit
-                                                </Button>{' '}
+                                                    <FaEdit style={{ fontSize: '1.2em', color: 'black' }} />
+                                                </Button>
                                                 <Button
-                                                    variant="danger"
+                                                    variant="link"
                                                     onClick={() => handleDelete('lambda', index)}
                                                 >
-                                                    Delete
+                                                    <FaTrash style={{ fontSize: '1.2em', color: 'black' }} />
                                                 </Button>
                                             </>
                                         ) : (
@@ -274,18 +282,18 @@ export default function DeploymentDetailsAWS() {
                                             >
                                                 <span className="d-inline-block">
                                                     <Button
-                                                        variant="warning"
+                                                        variant="link"
                                                         onClick={() => handleEdit('lambda', index)}
                                                         disabled
                                                     >
-                                                        Edit
-                                                    </Button>{' '}
+                                                        <FaEdit style={{ fontSize: '1.2em', color: 'black' }} />
+                                                    </Button>
                                                     <Button
-                                                        variant="danger"
+                                                        variant="link"
                                                         onClick={() => handleDelete('lambda', index)}
                                                         disabled
                                                     >
-                                                        Delete
+                                                        <FaTrash style={{ fontSize: '1.2em', color: 'black' }} />
                                                     </Button>
                                                 </span>
                                             </OverlayTrigger>
@@ -294,36 +302,36 @@ export default function DeploymentDetailsAWS() {
                                 </tr>
                             ))}
                         </tbody>
+                        {authState.isAuthenticated ? (
+                            <Button
+                                variant="link"
+                                onClick={() => handleAddRow('contact_flows')}
+                            >
+                                <FaPlus style={{ fontSize: '1.2em', color: 'black' }} />
+                            </Button>
+                        ) : (
+                            <OverlayTrigger
+                                placement="top"
+                                overlay={renderTooltip}
+                            >
+                                <span className="d-inline-block">
+                                    <Button
+                                        variant="dark"
+                                        onClick={() => handleAddRow('contact_flows')}
+                                        disabled
+                                    >
+                                        <BsPlus style={{ fontSize: '1.3em', fontWeight: 'bold', color: 'white' }} />
+                                    </Button>
+                                </span>
+                            </OverlayTrigger>
+                        )}
                     </Table>
-                    {authState.isAuthenticated ? (
-                        <Button
-                            variant="primary"
-                            onClick={() => handleAddRow('lambda')}
-                        >
-                            Add Lambda Function
-                        </Button>
-                    ) : (
-                        <OverlayTrigger
-                            placement="top"
-                            overlay={renderTooltip}
-                        >
-                            <span className="d-inline-block">
-                                <Button
-                                    variant="primary"
-                                    onClick={() => handleAddRow('lambda')}
-                                    disabled
-                                >
-                                    Add Lambda Function
-                                </Button>
-                            </span>
-                        </OverlayTrigger>
-                    )}
                 </Container>
 
                 <Container fluid className="mt-4">
-                    <h3>Contact Flows</h3>
-                    <Table striped bordered hover>
-                        <thead className="bg-primary text-white">
+                    <h4>Contact Flows</h4>
+                    <Table responsive hover>
+                        <thead>
                             <tr>
                                 <th>Name</th>
                                 <th>Type</th>
@@ -343,16 +351,16 @@ export default function DeploymentDetailsAWS() {
                                         {authState.isAuthenticated ? (
                                             <>
                                                 <Button
-                                                    variant="warning"
+                                                    variant="link"
                                                     onClick={() => handleEdit('contact_flows', index)}
                                                 >
-                                                    Edit
-                                                </Button>{' '}
+                                                    <FaEdit style={{ fontSize: '1.2em', color: 'black' }} />
+                                                </Button>
                                                 <Button
-                                                    variant="danger"
+                                                    variant="link"
                                                     onClick={() => handleDelete('contact_flows', index)}
                                                 >
-                                                    Delete
+                                                    <FaTrash style={{ fontSize: '1.2em', color: 'black' }} />
                                                 </Button>
                                             </>
                                         ) : (
@@ -362,18 +370,18 @@ export default function DeploymentDetailsAWS() {
                                             >
                                                 <span className="d-inline-block">
                                                     <Button
-                                                        variant="warning"
+                                                        variant="link"
                                                         onClick={() => handleEdit('contact_flows', index)}
                                                         disabled
                                                     >
-                                                        Edit
-                                                    </Button>{' '}
+                                                        <FaEdit style={{ fontSize: '1.2em', color: 'black' }} />
+                                                    </Button>
                                                     <Button
-                                                        variant="danger"
+                                                        variant="link"
                                                         onClick={() => handleDelete('contact_flows', index)}
                                                         disabled
                                                     >
-                                                        Delete
+                                                        <FaTrash style={{ fontSize: '1.2em', color: 'black' }} />
                                                     </Button>
                                                 </span>
                                             </OverlayTrigger>
@@ -382,35 +390,35 @@ export default function DeploymentDetailsAWS() {
                                 </tr>
                             ))}
                         </tbody>
+                        {authState.isAuthenticated ? (
+                            <Button
+                                variant="link"
+                                onClick={() => handleAddRow('contact_flows')}
+                            >
+                                <FaPlus style={{ fontSize: '1.2em', color: 'black' }} />
+                            </Button>
+                        ) : (
+                            <OverlayTrigger
+                                placement="top"
+                                overlay={renderTooltip}
+                            >
+                                <span className="d-inline-block">
+                                    <Button
+                                        variant="dark"
+                                        onClick={() => handleAddRow('contact_flows')}
+                                        disabled
+                                    >
+                                        <BsPlus style={{ fontSize: '1.3em', fontWeight: 'bold', color: 'white' }} />
+                                    </Button>
+                                </span>
+                            </OverlayTrigger>
+                        )}
                     </Table>
-                    {authState.isAuthenticated ? (
-                        <Button
-                            variant="primary"
-                            onClick={() => handleAddRow('contact_flows')}
-                        >
-                            Add Contact Flow
-                        </Button>
-                    ) : (
-                        <OverlayTrigger
-                            placement="top"
-                            overlay={renderTooltip}
-                        >
-                            <span className="d-inline-block">
-                                <Button
-                                    variant="primary"
-                                    onClick={() => handleAddRow('contact_flows')}
-                                    disabled
-                                >
-                                    Add Contact Flow
-                                </Button>
-                            </span>
-                        </OverlayTrigger>
-                    )}
                 </Container>
 
                 <Container fluid className="mt-4">
-                    <h3>API Gateways</h3>
-                    <Table striped bordered hover>
+                    <h3>API Gateway</h3>
+                    <Table responsive hover>
                         <thead className="bg-primary text-white">
                             <tr>
                                 <th>API Gateway Name</th>
@@ -439,16 +447,16 @@ export default function DeploymentDetailsAWS() {
                                         {authState.isAuthenticated ? (
                                             <>
                                                 <Button
-                                                    variant="warning"
+                                                    variant="link"
                                                     onClick={() => handleEdit('api_gateway', index)}
                                                 >
-                                                    Edit
-                                                </Button>{' '}
+                                                    <FaEdit style={{ fontSize: '1.2em', color: 'black' }} />
+                                                </Button>
                                                 <Button
-                                                    variant="danger"
+                                                    variant="link"
                                                     onClick={() => handleDelete('api_gateway', index)}
                                                 >
-                                                    Delete
+                                                    <FaTrash style={{ fontSize: '1.2em', color: 'black' }} />
                                                 </Button>
                                             </>
                                         ) : (
@@ -458,18 +466,18 @@ export default function DeploymentDetailsAWS() {
                                             >
                                                 <span className="d-inline-block">
                                                     <Button
-                                                        variant="warning"
+                                                        variant="link"
                                                         onClick={() => handleEdit('api_gateway', index)}
                                                         disabled
                                                     >
-                                                        Edit
-                                                    </Button>{' '}
+                                                        <FaEdit style={{ fontSize: '1.2em', color: 'black' }} />
+                                                    </Button>
                                                     <Button
-                                                        variant="danger"
-                                                        onClick={() => handleDelete('api_gateway', index)}
+                                                        variant="link"
+                                                        onClick={() => handleDelete('contact_flows', index)}
                                                         disabled
                                                     >
-                                                        Delete
+                                                        <FaTrash style={{ fontSize: '1.2em', color: 'black' }} />
                                                     </Button>
                                                 </span>
                                             </OverlayTrigger>
@@ -478,30 +486,30 @@ export default function DeploymentDetailsAWS() {
                                 </tr>
                             ))}
                         </tbody>
+                        {authState.isAuthenticated ? (
+                            <Button
+                                variant="link"
+                                onClick={() => handleAddRow('api_gateway')}
+                            >
+                                <FaPlus style={{ fontSize: '1.2em', color: 'black' }} />
+                            </Button>
+                        ) : (
+                            <OverlayTrigger
+                                placement="top"
+                                overlay={renderTooltip}
+                            >
+                                <span className="d-inline-block">
+                                    <Button
+                                        variant="dark"
+                                        onClick={() => handleAddRow('api_gateway')}
+                                        disabled
+                                    >
+                                        <BsPlus style={{ fontSize: '1.3em', fontWeight: 'bold', color: 'white' }} />
+                                    </Button>
+                                </span>
+                            </OverlayTrigger>
+                        )}
                     </Table>
-                    {authState.isAuthenticated ? (
-                        <Button
-                            variant="primary"
-                            onClick={() => handleAddRow('api_gateway')}
-                        >
-                            Add API Gateway
-                        </Button>
-                    ) : (
-                        <OverlayTrigger
-                            placement="top"
-                            overlay={renderTooltip}
-                        >
-                            <span className="d-inline-block">
-                                <Button
-                                    variant="primary"
-                                    onClick={() => handleAddRow('api_gateway')}
-                                    disabled
-                                >
-                                    Add API Gateway
-                                </Button>
-                            </span>
-                        </OverlayTrigger>
-                    )}
                 </Container>
 
                 <Modal show={showModal} onHide={() => setShowModal(false)}>
