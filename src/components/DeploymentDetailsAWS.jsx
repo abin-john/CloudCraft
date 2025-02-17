@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { Container, Table, Button, Form, Spinner, Alert, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { Container, Table, Button, Form, Spinner, Alert, OverlayTrigger, Tooltip, Tab, Tabs } from 'react-bootstrap';
 import { FaPlus, FaEdit, FaTrash, FaSave, FaTimes } from 'react-icons/fa';
 import { useOktaAuth } from '@okta/okta-react';
 
@@ -176,280 +176,279 @@ export default function DeploymentDetailsAWS() {
     return (
         <>
             <Container fluid className="mt-4">
-                <Container fluid className="mt-4">
-                    <h2>Deployment Details (AWS)</h2>
-                    <Table striped bordered hover>
-                        <tbody>
-                            <tr>
-                                <th>Date</th>
-                                <td>{data.date}</td>
-                            </tr>
-                            <tr>
-                                <th>Cloud Provider</th>
-                                <td>{data.provider}</td>
-                            </tr>
-                            <tr>
-                                <th>Created User</th>
-                                <td>{data.created_usr}</td>
-                            </tr>
-                            <tr>
-                                <th>Last Updated User</th>
-                                <td>{data.last_updated_usr}</td>
-                            </tr>
-                        </tbody>
-                    </Table>
-                </Container>
-
-                <Container fluid className="mt-4">
-                    <h3>Lambda Functions</h3>
-                    <Table responsive hover>
-                        <thead className="bg-primary text-white">
-                            <tr>
-                                <th>Function Name</th>
-                                <th>Application</th>
-                                <th>Owner</th>
-                                <th>Scrum Team</th>
-                                <th>Runtime</th>
-                                <th>Role</th>
-                                <th>Layers</th>
-                                <th>Environment Variable</th>
-                                <th>Comments</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {data.lambda.map((lambda, index) => (
-                                <tr key={index}>
-                                    {editingRow.type === 'lambda' && editingRow.index === index ? (
-                                        <>
-                                            <td><Form.Control type="text" name="function_name" value={newEntry.function_name || ''} onChange={handleChange} /></td>
-                                            <td><Form.Control type="text" name="application" value={newEntry.application || ''} onChange={handleChange} /></td>
-                                            <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
-                                            <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
-                                            <td><Form.Control type="text" name="runtime" value={newEntry.runtime || ''} onChange={handleChange} /></td>
-                                            <td><Form.Control type="text" name="role" value={newEntry.role || ''} onChange={handleChange} /></td>
-                                            <td><Form.Control type="text" name="layers" value={newEntry.layers || ''} onChange={handleChange} /></td>
-                                            <td><Form.Control type="text" name="environment_variable" value={newEntry.environment_variable || ''} onChange={handleChange} /></td>
-                                            <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
-                                            <td>
-                                                <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                                                <Button variant="link" onClick={() => setEditingRow(null)}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                                            </td>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <td>{lambda.function_name}</td>
-                                            <td>{lambda.application}</td>
-                                            <td>{lambda.owner}</td>
-                                            <td>{lambda.scrum_team}</td>
-                                            <td>{lambda.runtime}</td>
-                                            <td>{lambda.role}</td>
-                                            <td>{lambda.layers}</td>
-                                            <td>{lambda.environment_variable}</td>
-                                            <td>{lambda.comments}</td>
-                                            <td>
-                                                {authState.isAuthenticated ? (
-                                                    <>
-                                                        <Button variant="link" onClick={() => handleEdit('lambda', index)}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                                                        <Button variant="link" onClick={() => handleDelete('lambda', index)}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                                                    </>
-                                                ) : (
-                                                    <OverlayTrigger placement="top" overlay={renderTooltip}>
-                                                        <span className="d-inline-block">
-                                                            <Button variant="link" onClick={() => handleEdit('lambda', index)} disabled><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                                                            <Button variant="link" onClick={() => handleDelete('lambda', index)} disabled><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                                                        </span>
-                                                    </OverlayTrigger>
-                                                )}
-                                            </td>
-                                        </>
-                                    )}
-                                </tr>
-                            ))}
-                            {editingRow.type === 'lambda' && editingRow.index === data.lambda.length && (
-                                <tr>
-                                    <td><Form.Control type="text" name="function_name" value={newEntry.function_name || ''} onChange={handleChange} /></td>
-                                    <td><Form.Control type="text" name="application" value={newEntry.application || ''} onChange={handleChange} /></td>
-                                    <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
-                                    <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
-                                    <td><Form.Control type="text" name="runtime" value={newEntry.runtime || ''} onChange={handleChange} /></td>
-                                    <td><Form.Control type="text" name="role" value={newEntry.role || ''} onChange={handleChange} /></td>
-                                    <td><Form.Control type="text" name="layers" value={newEntry.layers || ''} onChange={handleChange} /></td>
-                                    <td><Form.Control type="text" name="environment_variable" value={newEntry.environment_variable || ''} onChange={handleChange} /></td>
-                                    <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
-                                    <td>
-                                        <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                                        <Button variant="link" onClick={() => setEditingRow(null)}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                        {authState.isAuthenticated && (
-                            <Button variant="link" onClick={() => handleAddRow('lambda')}><FaPlus style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                        )}
-                    </Table>
-                </Container>
-
-                <Container fluid className="mt-4">
-                    <h3>Contact Flows</h3>
-                    <Table responsive hover>
-                        <thead className="bg-primary text-white">
-                            <tr>
-                                <th>Flow Name</th>
-                                <th>Application</th>
-                                <th>Owner</th>
-                                <th>Scrum Team</th>
-                                <th>Comments</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {data.contact_flows.map((flow, index) => (
-                                <tr key={index}>
-                                    {editingRow.type === 'contact_flows' && editingRow.index === index ? (
-                                        <>
-                                            <td><Form.Control type="text" name="flow_name" value={newEntry.flow_name || ''} onChange={handleChange} /></td>
-                                            <td><Form.Control type="text" name="application" value={newEntry.application || ''} onChange={handleChange} /></td>
-                                            <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
-                                            <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
-                                            <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
-                                            <td>
-                                                <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                                                <Button variant="link" onClick={() => setEditingRow(null)}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                                            </td>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <td>{flow.flow_name}</td>
-                                            <td>{flow.application}</td>
-                                            <td>{flow.owner}</td>
-                                            <td>{flow.scrum_team}</td>
-                                            <td>{flow.comments}</td>
-                                            <td>
-                                                {authState.isAuthenticated ? (
-                                                    <>
-                                                        <Button variant="link" onClick={() => handleEdit('contact_flows', index)}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                                                        <Button variant="link" onClick={() => handleDelete('contact_flows', index)}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                                                    </>
-                                                ) : (
-                                                    <OverlayTrigger placement="top" overlay={renderTooltip}>
-                                                        <span className="d-inline-block">
-                                                            <Button variant="link" onClick={() => handleEdit('contact_flows', index)} disabled><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                                                            <Button variant="link" onClick={() => handleDelete('contact_flows', index)} disabled><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                                                        </span>
-                                                    </OverlayTrigger>
-                                                )}
-                                            </td>
-                                        </>
-                                    )}
-                                </tr>
-                            ))}
-                            {editingRow.type === 'contact_flows' && editingRow.index === data.contact_flows.length && (
-                                <tr>
-                                    <td><Form.Control type="text" name="flow_name" value={newEntry.flow_name || ''} onChange={handleChange} /></td>
-                                    <td><Form.Control type="text" name="application" value={newEntry.application || ''} onChange={handleChange} /></td>
-                                    <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
-                                    <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
-                                    <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
-                                    <td>
-                                        <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                                        <Button variant="link" onClick={() => setEditingRow(null)}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                        {authState.isAuthenticated && (
-                            <Button variant="link" onClick={() => handleAddRow('contact_flows')}><FaPlus style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                        )}
-                    </Table>
-                </Container>
-
-                <Container fluid className="mt-4">
-                    <h3>API Gateway</h3>
-                    <Table responsive hover>
-                        <thead className="bg-primary text-white">
-                            <tr>
-                                <th>API Gateway Name</th>
-                                <th>Route</th>
-                                <th>Method</th>
-                                <th>Authorization</th>
-                                <th>Lambda Function</th>
-                                <th>Owner</th>
-                                <th>Scrum Team</th>
-                                <th>API Type</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {data.api_gateway.map((api, index) => (
-                                <tr key={index}>
-                                    {editingRow.type === 'api_gateway' && editingRow.index === index ? (
-                                        <>
-                                            <td><Form.Control type="text" name="api_gateway_name" value={newEntry.api_gateway_name || ''} onChange={handleChange} /></td>
-                                            <td><Form.Control type="text" name="route" value={newEntry.route || ''} onChange={handleChange} /></td>
-                                            <td><Form.Control type="text" name="method" value={newEntry.method || ''} onChange={handleChange} /></td>
-                                            <td><Form.Control type="text" name="authorization" value={newEntry.authorization || ''} onChange={handleChange} /></td>
-                                            <td><Form.Control type="text" name="lambda_function" value={newEntry.lambda_function || ''} onChange={handleChange} /></td>
-                                            <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
-                                            <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
-                                            <td><Form.Control type="text" name="api_type" value={newEntry.api_type || ''} onChange={handleChange} /></td>
-                                            <td>
-                                                <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                                                <Button variant="link" onClick={() => setEditingRow(null)}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                                            </td>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <td>{api.api_gateway_name}</td>
-                                            <td>{api.route}</td>
-                                            <td>{api.method}</td>
-                                            <td>{api.authorization}</td>
-                                            <td>{api.lambda_function}</td>
-                                            <td>{api.owner}</td>
-                                            <td>{api.scrum_team}</td>
-                                            <td>{api.api_type}</td>
-                                            <td>
-                                                {authState.isAuthenticated ? (
-                                                    <>
-                                                        <Button variant="link" onClick={() => handleEdit('api_gateway', index)}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                                                        <Button variant="link" onClick={() => handleDelete('api_gateway', index)}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                                                    </>
-                                                ) : (
-                                                    <OverlayTrigger placement="top" overlay={renderTooltip}>
-                                                        <span className="d-inline-block">
-                                                            <Button variant="link" onClick={() => handleEdit('api_gateway', index)} disabled><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                                                            <Button variant="link" onClick={() => handleDelete('api_gateway', index)} disabled><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                                                        </span>
-                                                    </OverlayTrigger>
-                                                )}
-                                            </td>
-                                        </>
-                                    )}
-                                </tr>
-                            ))}
-                            {editingRow.type === 'api_gateway' && editingRow.index === data.api_gateway.length && (
-                                <tr>
-                                    <td><Form.Control type="text" name="api_gateway_name" value={newEntry.api_gateway_name || ''} onChange={handleChange} /></td>
-                                    <td><Form.Control type="text" name="route" value={newEntry.route || ''} onChange={handleChange} /></td>
-                                    <td><Form.Control type="text" name="method" value={newEntry.method || ''} onChange={handleChange} /></td>
-                                    <td><Form.Control type="text" name="authorization" value={newEntry.authorization || ''} onChange={handleChange} /></td>
-                                    <td><Form.Control type="text" name="lambda_function" value={newEntry.lambda_function || ''} onChange={handleChange} /></td>
-                                    <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
-                                    <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
-                                    <td><Form.Control type="text" name="api_type" value={newEntry.api_type || ''} onChange={handleChange} /></td>
-                                    <td>
-                                        <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                                        <Button variant="link" onClick={() => setEditingRow(null)}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                        {authState.isAuthenticated && (
-                            <Button variant="link" onClick={() => handleAddRow('api_gateway')}><FaPlus style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                        )}
-                    </Table>
-                </Container>
+                <h2>Deployment Details (AWS)</h2>
+                <Table striped bordered hover>
+                    <tbody>
+                        <tr>
+                            <th>Date</th>
+                            <td>{data.date}</td>
+                        </tr>
+                        <tr>
+                            <th>Cloud Provider</th>
+                            <td>{data.provider}</td>
+                        </tr>
+                        <tr>
+                            <th>Created User</th>
+                            <td>{data.created_usr}</td>
+                        </tr>
+                        <tr>
+                            <th>Last Updated User</th>
+                            <td>{data.last_updated_usr}</td>
+                        </tr>
+                    </tbody>
+                </Table>
             </Container>
+
+            <Container fluid className="mt-4">
+                <Tabs defaultActiveKey="lambda" id="deployment-details-tabs">
+                    <Tab eventKey="lambda" title="Lambda Functions">
+                        <Table responsive hover>
+                            <thead className="bg-primary text-white">
+                                <tr>
+                                    <th>Function Name</th>
+                                    <th>Application</th>
+                                    <th>Owner</th>
+                                    <th>Scrum Team</th>
+                                    <th>Runtime</th>
+                                    <th>Role</th>
+                                    <th>Layers</th>
+                                    <th>Environment Variable</th>
+                                    <th>Comments</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {data.lambda.map((lambda, index) => (
+                                    <tr key={index}>
+                                        {editingRow.type === 'lambda' && editingRow.index === index ? (
+                                            <>
+                                                <td><Form.Control type="text" name="function_name" value={newEntry.function_name || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="application" value={newEntry.application || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="runtime" value={newEntry.runtime || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="role" value={newEntry.role || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="layers" value={newEntry.layers || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="environment_variable" value={newEntry.environment_variable || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
+                                                <td>
+                                                    <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                    <Button variant="link" onClick={() => setEditingRow({ type: null, index: null })}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                </td>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <td>{lambda.function_name}</td>
+                                                <td>{lambda.application}</td>
+                                                <td>{lambda.owner}</td>
+                                                <td>{lambda.scrum_team}</td>
+                                                <td>{lambda.runtime}</td>
+                                                <td>{lambda.role}</td>
+                                                <td>{lambda.layers}</td>
+                                                <td>{lambda.environment_variable}</td>
+                                                <td>{lambda.comments}</td>
+                                                <td>
+                                                    {authState.isAuthenticated ? (
+                                                        <>
+                                                            <Button variant="link" onClick={() => handleEdit('lambda', index)}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                            <Button variant="link" onClick={() => handleDelete('lambda', index)}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                        </>
+                                                    ) : (
+                                                        <OverlayTrigger placement="top" overlay={renderTooltip}>
+                                                            <span className="d-inline-block">
+                                                                <Button variant="link" onClick={() => handleEdit('lambda', index)} disabled><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                                <Button variant="link" onClick={() => handleDelete('lambda', index)} disabled><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                            </span>
+                                                        </OverlayTrigger>
+                                                    )}
+                                                </td>
+                                            </>
+                                        )}
+                                    </tr>
+                                ))}
+                                {editingRow.type === 'lambda' && editingRow.index === data.lambda.length && (
+                                    <tr>
+                                        <td><Form.Control type="text" name="function_name" value={newEntry.function_name || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="application" value={newEntry.application || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="runtime" value={newEntry.runtime || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="role" value={newEntry.role || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="layers" value={newEntry.layers || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="environment_variable" value={newEntry.environment_variable || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
+                                        <td>
+                                            <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                            <Button variant="link" onClick={() => setEditingRow({ type: null, index: null })}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                            {authState.isAuthenticated && (
+                                <Button variant="link" onClick={() => handleAddRow('lambda')}><FaPlus style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                            )}
+                        </Table>
+                    </Tab>
+
+                    <Tab eventKey="contact_flows" title="Contact Flows">
+                        <Table responsive hover>
+                            <thead className="bg-primary text-white">
+                                <tr>
+                                    <th>Flow Name</th>
+                                    <th>Application</th>
+                                    <th>Owner</th>
+                                    <th>Scrum Team</th>
+                                    <th>Comments</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {data.contact_flows.map((flow, index) => (
+                                    <tr key={index}>
+                                        {editingRow.type === 'contact_flows' && editingRow.index === index ? (
+                                            <>
+                                                <td><Form.Control type="text" name="flow_name" value={newEntry.flow_name || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="application" value={newEntry.application || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
+                                                <td>
+                                                    <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                    <Button variant="link" onClick={() => setEditingRow({ type: null, index: null })}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                </td>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <td>{flow.flow_name}</td>
+                                                <td>{flow.application}</td>
+                                                <td>{flow.owner}</td>
+                                                <td>{flow.scrum_team}</td>
+                                                <td>{flow.comments}</td>
+                                                <td>
+                                                    {authState.isAuthenticated ? (
+                                                        <>
+                                                            <Button variant="link" onClick={() => handleEdit('contact_flows', index)}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                            <Button variant="link" onClick={() => handleDelete('contact_flows', index)}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                        </>
+                                                    ) : (
+                                                        <OverlayTrigger placement="top" overlay={renderTooltip}>
+                                                            <span className="d-inline-block">
+                                                                <Button variant="link" onClick={() => handleEdit('contact_flows', index)} disabled><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                                <Button variant="link" onClick={() => handleDelete('contact_flows', index)} disabled><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                            </span>
+                                                        </OverlayTrigger>
+                                                    )}
+                                                </td>
+                                            </>
+                                        )}
+                                    </tr>
+                                ))}
+                                {editingRow.type === 'contact_flows' && editingRow.index === data.contact_flows.length && (
+                                    <tr>
+                                        <td><Form.Control type="text" name="flow_name" value={newEntry.flow_name || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="application" value={newEntry.application || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
+                                        <td>
+                                            <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                            <Button variant="link" onClick={() => setEditingRow({ type: null, index: null })}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                            {authState.isAuthenticated && (
+                                <Button variant="link" onClick={() => handleAddRow('contact_flows')}><FaPlus style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                            )}
+                        </Table>
+                    </Tab>
+
+                    <Tab eventKey="api_gateway" title="API Gateway">
+                        <Table responsive hover>
+                            <thead className="bg-primary text-white">
+                                <tr>
+                                    <th>API Gateway Name</th>
+                                    <th>Route</th>
+                                    <th>Method</th>
+                                    <th>Authorization</th>
+                                    <th>Lambda Function</th>
+                                    <th>Owner</th>
+                                    <th>Scrum Team</th>
+                                    <th>API Type</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {data.api_gateway.map((api, index) => (
+                                    <tr key={index}>
+                                        {editingRow.type === 'api_gateway' && editingRow.index === index ? (
+                                            <>
+                                                <td><Form.Control type="text" name="api_gateway_name" value={newEntry.api_gateway_name || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="route" value={newEntry.route || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="method" value={newEntry.method || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="authorization" value={newEntry.authorization || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="lambda_function" value={newEntry.lambda_function || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="api_type" value={newEntry.api_type || ''} onChange={handleChange} /></td>
+                                                <td>
+                                                    <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                    <Button variant="link" onClick={() => setEditingRow({ type: null, index: null })}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                </td>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <td>{api.api_gateway_name}</td>
+                                                <td>{api.route}</td>
+                                                <td>{api.method}</td>
+                                                <td>{api.authorization}</td>
+                                                <td>{api.lambda_function}</td>
+                                                <td>{api.owner}</td>
+                                                <td>{api.scrum_team}</td>
+                                                <td>{api.api_type}</td>
+                                                <td>
+                                                    {authState.isAuthenticated ? (
+                                                        <>
+                                                            <Button variant="link" onClick={() => handleEdit('api_gateway', index)}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                            <Button variant="link" onClick={() => handleDelete('api_gateway', index)}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                        </>
+                                                    ) : (
+                                                        <OverlayTrigger placement="top" overlay={renderTooltip}>
+                                                            <span className="d-inline-block">
+                                                                <Button variant="link" onClick={() => handleEdit('api_gateway', index)} disabled><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                                <Button variant="link" onClick={() => handleDelete('api_gateway', index)} disabled><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                            </span>
+                                                        </OverlayTrigger>
+                                                    )}
+                                                </td>
+                                            </>
+                                        )}
+                                    </tr>
+                                ))}
+                                {editingRow.type === 'api_gateway' && editingRow.index === data.api_gateway.length && (
+                                    <tr>
+                                        <td><Form.Control type="text" name="api_gateway_name" value={newEntry.api_gateway_name || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="route" value={newEntry.route || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="method" value={newEntry.method || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="authorization" value={newEntry.authorization || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="lambda_function" value={newEntry.lambda_function || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="api_type" value={newEntry.api_type || ''} onChange={handleChange} /></td>
+                                        <td>
+                                            <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                            <Button variant="link" onClick={() => setEditingRow({ type: null, index: null })}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                            {authState.isAuthenticated && (
+                                <Button variant="link" onClick={() => handleAddRow('api_gateway')}><FaPlus style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                            )}
+                        </Table>
+                    </Tab >
+                </Tabs >
+            </Container >
         </>
     );
 }
