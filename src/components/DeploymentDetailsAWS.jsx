@@ -213,6 +213,7 @@ export default function DeploymentDetailsAWS() {
                                     <th>Role</th>
                                     <th>Layers</th>
                                     <th>Environment Variable</th>
+                                    <th>Region</th>
                                     <th>Comments</th>
                                     <th>Actions</th>
                                 </tr>
@@ -222,14 +223,34 @@ export default function DeploymentDetailsAWS() {
                                     <tr key={index}>
                                         {editingRow.type === 'lambda' && editingRow.index === index ? (
                                             <>
-                                                <td><Form.Control type="text" name="function_name" value={newEntry.function_name || ''} onChange={handleChange} /></td>
-                                                <td><Form.Control type="text" name="application" value={newEntry.application || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="function_name" value={newEntry.function_name || ''} onChange={handleChange} placeholder="Function Name" /></td>
+                                                <td>
+                                                    <Form.Control as="select" name="application" value={newEntry.application || ''} onChange={handleChange}>
+                                                        <option value="">Select Application</option>
+                                                        <option value="Telesales">Telesales</option>
+                                                        <option value="Clinical">Clinical</option>
+                                                        <option value="GC ELV">GC ELV</option>
+                                                        <option value="GC Carelon">GC Carelon</option>
+                                                        <option value="CCVR Blue ELV - DVA">CCVR Blue ELV - DVA</option>
+                                                        <option value="CCVR Green ELV - DVA">CCVR Green ELV - DVA</option>
+                                                        <option value="CCVR Blue ELV">CCVR Blue ELV</option>
+                                                        <option value="CCVR Green ELV">CCVR Green ELV</option>
+                                                        <option value="CCVR Blue Carelon">CCVR Blue Carelon</option>
+                                                        <option value="CCVR Green Carelon">CCVR Green Carelon</option>
+                                                    </Form.Control>
+                                                </td>
                                                 <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="runtime" value={newEntry.runtime || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="role" value={newEntry.role || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="layers" value={newEntry.layers || ''} onChange={handleChange} /></td>
-                                                <td><Form.Control type="text" name="environment_variable" value={newEntry.environment_variable || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control as="textarea" name="environment_variable" value={newEntry.environment_variable || ''} onChange={handleChange} /></td>
+                                                <td>
+                                                    <Form.Control as="select" name="region" value={newEntry.region || 'us-east-1'} onChange={handleChange}>
+                                                        <option value="us-east-1">us-east-1</option>
+                                                        <option value="us-west-2">us-west-2</option>
+                                                    </Form.Control>
+                                                </td>
                                                 <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
                                                 <td>
                                                     <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
@@ -245,7 +266,8 @@ export default function DeploymentDetailsAWS() {
                                                 <td>{lambda.runtime}</td>
                                                 <td>{lambda.role}</td>
                                                 <td>{lambda.layers}</td>
-                                                <td>{lambda.environment_variable}</td>
+                                                <td style={{ whiteSpace: 'pre-wrap' }}>{lambda.environment_variable}</td>
+                                                <td>{lambda.region}</td>
                                                 <td>{lambda.comments}</td>
                                                 <td>
                                                     {authState.isAuthenticated ? (
@@ -268,14 +290,34 @@ export default function DeploymentDetailsAWS() {
                                 ))}
                                 {editingRow.type === 'lambda' && editingRow.index === data.lambda.length && (
                                     <tr>
-                                        <td><Form.Control type="text" name="function_name" value={newEntry.function_name || ''} onChange={handleChange} /></td>
-                                        <td><Form.Control type="text" name="application" value={newEntry.application || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="function_name" value={newEntry.function_name || ''} onChange={handleChange} placeholder="Enter Function Name" /></td>
+                                        <td>
+                                            <Form.Control as="select" name="application" value={newEntry.application || ''} onChange={handleChange}>
+                                                <option value="">Select Application</option>
+                                                <option value="Telesales">Telesales</option>
+                                                <option value="Clinical">Clinical</option>
+                                                <option value="GC ELV">GC ELV</option>
+                                                <option value="GC Carelon">GC Carelon</option>
+                                                <option value="CCVR Blue ELV - DVA">CCVR Blue ELV - DVA</option>
+                                                <option value="CCVR Green ELV - DVA">CCVR Green ELV - DVA</option>
+                                                <option value="CCVR Blue ELV">CCVR Blue ELV</option>
+                                                <option value="CCVR Green ELV">CCVR Green ELV</option>
+                                                <option value="CCVR Blue Carelon">CCVR Blue Carelon</option>
+                                                <option value="CCVR Green Carelon">CCVR Green Carelon</option>
+                                            </Form.Control>
+                                        </td>
                                         <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="runtime" value={newEntry.runtime || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="role" value={newEntry.role || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="layers" value={newEntry.layers || ''} onChange={handleChange} /></td>
-                                        <td><Form.Control type="text" name="environment_variable" value={newEntry.environment_variable || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control as="textarea" name="environment_variable" value={newEntry.environment_variable || ''} onChange={handleChange} /></td>
+                                        <td>
+                                            <Form.Control as="select" name="region" value={newEntry.region || 'us-east-1'} onChange={handleChange}>
+                                                <option value="us-east-1">us-east-1</option>
+                                                <option value="us-west-2">us-west-2</option>
+                                            </Form.Control>
+                                        </td>
                                         <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
                                         <td>
                                             <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
@@ -298,6 +340,7 @@ export default function DeploymentDetailsAWS() {
                                     <th>Application</th>
                                     <th>Owner</th>
                                     <th>Scrum Team</th>
+                                    <th>Region</th>
                                     <th>Comments</th>
                                     <th>Actions</th>
                                 </tr>
@@ -308,9 +351,29 @@ export default function DeploymentDetailsAWS() {
                                         {editingRow.type === 'contact_flows' && editingRow.index === index ? (
                                             <>
                                                 <td><Form.Control type="text" name="flow_name" value={newEntry.flow_name || ''} onChange={handleChange} /></td>
-                                                <td><Form.Control type="text" name="application" value={newEntry.application || ''} onChange={handleChange} /></td>
+                                                <td>
+                                                    <Form.Control as="select" name="application" value={newEntry.application || ''} onChange={handleChange}>
+                                                        <option value="">Select Application</option>
+                                                        <option value="Telesales">Telesales</option>
+                                                        <option value="Clinical">Clinical</option>
+                                                        <option value="GC ELV">GC ELV</option>
+                                                        <option value="GC Carelon">GC Carelon</option>
+                                                        <option value="CCVR Blue ELV - DVA">CCVR Blue ELV - DVA</option>
+                                                        <option value="CCVR Green ELV - DVA">CCVR Green ELV - DVA</option>
+                                                        <option value="CCVR Blue ELV">CCVR Blue ELV</option>
+                                                        <option value="CCVR Green ELV">CCVR Green ELV</option>
+                                                        <option value="CCVR Blue Carelon">CCVR Blue Carelon</option>
+                                                        <option value="CCVR Green Carelon">CCVR Green Carelon</option>
+                                                    </Form.Control>
+                                                </td>
                                                 <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
+                                                <td>
+                                                    <Form.Control as="select" name="region" value={newEntry.region || 'us-east-1'} onChange={handleChange}>
+                                                        <option value="us-east-1">us-east-1</option>
+                                                        <option value="us-west-2">us-west-2</option>
+                                                    </Form.Control>
+                                                </td>
                                                 <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
                                                 <td>
                                                     <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
@@ -323,6 +386,7 @@ export default function DeploymentDetailsAWS() {
                                                 <td>{flow.application}</td>
                                                 <td>{flow.owner}</td>
                                                 <td>{flow.scrum_team}</td>
+                                                <td>{flow.region}</td>
                                                 <td>{flow.comments}</td>
                                                 <td>
                                                     {authState.isAuthenticated ? (
@@ -346,9 +410,29 @@ export default function DeploymentDetailsAWS() {
                                 {editingRow.type === 'contact_flows' && editingRow.index === data.contact_flows.length && (
                                     <tr>
                                         <td><Form.Control type="text" name="flow_name" value={newEntry.flow_name || ''} onChange={handleChange} /></td>
-                                        <td><Form.Control type="text" name="application" value={newEntry.application || ''} onChange={handleChange} /></td>
+                                        <td>
+                                            <Form.Control as="select" name="application" value={newEntry.application || ''} onChange={handleChange}>
+                                                <option value="">Select Application</option>
+                                                <option value="Telesales">Telesales</option>
+                                                <option value="Clinical">Clinical</option>
+                                                <option value="GC ELV">GC ELV</option>
+                                                <option value="GC Carelon">GC Carelon</option>
+                                                <option value="CCVR Blue ELV - DVA">CCVR Blue ELV - DVA</option>
+                                                <option value="CCVR Green ELV - DVA">CCVR Green ELV - DVA</option>
+                                                <option value="CCVR Blue ELV">CCVR Blue ELV</option>
+                                                <option value="CCVR Green ELV">CCVR Green ELV</option>
+                                                <option value="CCVR Blue Carelon">CCVR Blue Carelon</option>
+                                                <option value="CCVR Green Carelon">CCVR Green Carelon</option>
+                                            </Form.Control>
+                                        </td>
                                         <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
+                                        <td>
+                                            <Form.Control as="select" name="region" value={newEntry.region || 'us-east-1'} onChange={handleChange}>
+                                                <option value="us-east-1">us-east-1</option>
+                                                <option value="us-west-2">us-west-2</option>
+                                            </Form.Control>
+                                        </td>
                                         <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
                                         <td>
                                             <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
@@ -375,6 +459,7 @@ export default function DeploymentDetailsAWS() {
                                     <th>Owner</th>
                                     <th>Scrum Team</th>
                                     <th>API Type</th>
+                                    <th>Region</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -392,6 +477,12 @@ export default function DeploymentDetailsAWS() {
                                                 <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="api_type" value={newEntry.api_type || ''} onChange={handleChange} /></td>
                                                 <td>
+                                                    <Form.Control as="select" name="region" value={newEntry.region || 'us-east-1'} onChange={handleChange}>
+                                                        <option value="us-east-1">us-east-1</option>
+                                                        <option value="us-west-2">us-west-2</option>
+                                                    </Form.Control>
+                                                </td>
+                                                <td>
                                                     <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
                                                     <Button variant="link" onClick={() => setEditingRow({ type: null, index: null })}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
                                                 </td>
@@ -406,6 +497,7 @@ export default function DeploymentDetailsAWS() {
                                                 <td>{api.owner}</td>
                                                 <td>{api.scrum_team}</td>
                                                 <td>{api.api_type}</td>
+                                                <td>{api.region}</td>
                                                 <td>
                                                     {authState.isAuthenticated ? (
                                                         <>
@@ -436,6 +528,12 @@ export default function DeploymentDetailsAWS() {
                                         <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="api_type" value={newEntry.api_type || ''} onChange={handleChange} /></td>
                                         <td>
+                                            <Form.Control as="select" name="region" value={newEntry.region || 'us-east-1'} onChange={handleChange}>
+                                                <option value="us-east-1">us-east-1</option>
+                                                <option value="us-west-2">us-west-2</option>
+                                            </Form.Control>
+                                        </td>
+                                        <td>
                                             <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
                                             <Button variant="link" onClick={() => setEditingRow({ type: null, index: null })}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
                                         </td>
@@ -454,6 +552,7 @@ export default function DeploymentDetailsAWS() {
                                     <th>Script Path</th>
                                     <th>Scrum Team</th>
                                     <th>Owner</th>
+                                    <th>Region</th>
                                     <th>Comments</th>
                                     <th>Actions</th>
                                 </tr>
@@ -466,6 +565,12 @@ export default function DeploymentDetailsAWS() {
                                                 <td><Form.Control type="text" name="script_path" value={newEntry.script_path || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                                <td>
+                                                    <Form.Control as="select" name="region" value={newEntry.region || 'us-east-1'} onChange={handleChange}>
+                                                        <option value="us-east-1">us-east-1</option>
+                                                        <option value="us-west-2">us-west-2</option>
+                                                    </Form.Control>
+                                                </td>
                                                 <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
                                                 <td>
                                                     <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
@@ -477,6 +582,7 @@ export default function DeploymentDetailsAWS() {
                                                 <td>{entry.script_path}</td>
                                                 <td>{entry.scrum_team}</td>
                                                 <td>{entry.owner}</td>
+                                                <td>{entry.region}</td>
                                                 <td>{entry.comments}</td>
                                                 <td>
                                                     {authState.isAuthenticated ? (
@@ -502,6 +608,12 @@ export default function DeploymentDetailsAWS() {
                                         <td><Form.Control type="text" name="script_path" value={newEntry.script_path || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                        <td>
+                                            <Form.Control as="select" name="region" value={newEntry.region || 'us-east-1'} onChange={handleChange}>
+                                                <option value="us-east-1">us-east-1</option>
+                                                <option value="us-west-2">us-west-2</option>
+                                            </Form.Control>
+                                        </td>
                                         <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
                                         <td>
                                             <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
@@ -526,6 +638,7 @@ export default function DeploymentDetailsAWS() {
                                     <th>Branch</th>
                                     <th>CloudFront URL</th>
                                     <th>Scrum Team</th>
+                                    <th>Region</th>
                                     <th>Comments</th>
                                     <th>Actions</th>
                                 </tr>
@@ -536,12 +649,32 @@ export default function DeploymentDetailsAWS() {
                                         {editingRow.type === 'ui' && editingRow.index === index ? (
                                             <>
                                                 <td><Form.Control type="text" name="name" value={newEntry.name || ''} onChange={handleChange} /></td>
-                                                <td><Form.Control type="text" name="application" value={newEntry.application || ''} onChange={handleChange} /></td>
+                                                <td>
+                                                    <Form.Control as="select" name="application" value={newEntry.application || ''} onChange={handleChange}>
+                                                        <option value="">Select Application</option>
+                                                        <option value="Telesales">Telesales</option>
+                                                        <option value="Clinical">Clinical</option>
+                                                        <option value="GC ELV">GC ELV</option>
+                                                        <option value="GC Carelon">GC Carelon</option>
+                                                        <option value="CCVR Blue ELV - DVA">CCVR Blue ELV - DVA</option>
+                                                        <option value="CCVR Green ELV - DVA">CCVR Green ELV - DVA</option>
+                                                        <option value="CCVR Blue ELV">CCVR Blue ELV</option>
+                                                        <option value="CCVR Green ELV">CCVR Green ELV</option>
+                                                        <option value="CCVR Blue Carelon">CCVR Blue Carelon</option>
+                                                        <option value="CCVR Green Carelon">CCVR Green Carelon</option>
+                                                    </Form.Control>
+                                                </td>
                                                 <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="bitbucket_repo" value={newEntry.bitbucket_repo || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="branch" value={newEntry.branch || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="cloudfront_url" value={newEntry.cloudfront_url || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
+                                                <td>
+                                                    <Form.Control as="select" name="region" value={newEntry.region || 'us-east-1'} onChange={handleChange}>
+                                                        <option value="us-east-1">us-east-1</option>
+                                                        <option value="us-west-2">us-west-2</option>
+                                                    </Form.Control>
+                                                </td>
                                                 <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
                                                 <td>
                                                     <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
@@ -557,6 +690,7 @@ export default function DeploymentDetailsAWS() {
                                                 <td>{ui.branch}</td>
                                                 <td>{ui.cloudfront_url}</td>
                                                 <td>{ui.scrum_team}</td>
+                                                <td>{ui.region}</td>
                                                 <td>{ui.comments}</td>
                                                 <td>
                                                     {authState.isAuthenticated ? (
@@ -580,12 +714,32 @@ export default function DeploymentDetailsAWS() {
                                 {editingRow.type === 'ui' && editingRow.index === data.ui.length && (
                                     <tr>
                                         <td><Form.Control type="text" name="name" value={newEntry.name || ''} onChange={handleChange} /></td>
-                                        <td><Form.Control type="text" name="application" value={newEntry.application || ''} onChange={handleChange} /></td>
+                                        <td>
+                                            <Form.Control as="select" name="application" value={newEntry.application || ''} onChange={handleChange}>
+                                                <option value="">Select Application</option>
+                                                <option value="Telesales">Telesales</option>
+                                                <option value="Clinical">Clinical</option>
+                                                <option value="GC ELV">GC ELV</option>
+                                                <option value="GC Carelon">GC Carelon</option>
+                                                <option value="CCVR Blue ELV - DVA">CCVR Blue ELV - DVA</option>
+                                                <option value="CCVR Green ELV - DVA">CCVR Green ELV - DVA</option>
+                                                <option value="CCVR Blue ELV">CCVR Blue ELV</option>
+                                                <option value="CCVR Green ELV">CCVR Green ELV</option>
+                                                <option value="CCVR Blue Carelon">CCVR Blue Carelon</option>
+                                                <option value="CCVR Green Carelon">CCVR Green Carelon</option>
+                                            </Form.Control>
+                                        </td>
                                         <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="bitbucket_repo" value={newEntry.bitbucket_repo || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="branch" value={newEntry.branch || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="cloudfront_url" value={newEntry.cloudfront_url || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
+                                        <td>
+                                            <Form.Control as="select" name="region" value={newEntry.region || 'us-east-1'} onChange={handleChange}>
+                                                <option value="us-east-1">us-east-1</option>
+                                                <option value="us-west-2">us-west-2</option>
+                                            </Form.Control>
+                                        </td>
                                         <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
                                         <td>
                                             <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
@@ -608,6 +762,7 @@ export default function DeploymentDetailsAWS() {
                                     <th>Type</th>
                                     <th>Event Pattern</th>
                                     <th>Targets</th>
+                                    <th>Region</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -622,6 +777,12 @@ export default function DeploymentDetailsAWS() {
                                                 <td><Form.Control type="text" name="event_pattern" value={newEntry.event_pattern || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="targets" value={newEntry.targets || ''} onChange={handleChange} /></td>
                                                 <td>
+                                                    <Form.Control as="select" name="region" value={newEntry.region || 'us-east-1'} onChange={handleChange}>
+                                                        <option value="us-east-1">us-east-1</option>
+                                                        <option value="us-west-2">us-west-2</option>
+                                                    </Form.Control>
+                                                </td>
+                                                <td>
                                                     <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
                                                     <Button variant="link" onClick={() => setEditingRow({ type: null, index: null })}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
                                                 </td>
@@ -633,6 +794,7 @@ export default function DeploymentDetailsAWS() {
                                                 <td>{eb.type}</td>
                                                 <td>{eb.event_pattern}</td>
                                                 <td>{eb.targets}</td>
+                                                <td>{eb.region}</td>
                                                 <td>
                                                     {authState.isAuthenticated ? (
                                                         <>
@@ -660,6 +822,12 @@ export default function DeploymentDetailsAWS() {
                                         <td><Form.Control type="text" name="event_pattern" value={newEntry.event_pattern || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="targets" value={newEntry.targets || ''} onChange={handleChange} /></td>
                                         <td>
+                                            <Form.Control as="select" name="region" value={newEntry.region || 'us-east-1'} onChange={handleChange}>
+                                                <option value="us-east-1">us-east-1</option>
+                                                <option value="us-west-2">us-west-2</option>
+                                            </Form.Control>
+                                        </td>
+                                        <td>
                                             <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
                                             <Button variant="link" onClick={() => setEditingRow({ type: null, index: null })}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
                                         </td>
@@ -680,6 +848,7 @@ export default function DeploymentDetailsAWS() {
                                     <th>Owner</th>
                                     <th>Application</th>
                                     <th>Scrum Team</th>
+                                    <th>Region</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -691,8 +860,28 @@ export default function DeploymentDetailsAWS() {
                                                 <td><Form.Control type="text" name="name" value={newEntry.name || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="permissions" value={newEntry.permissions || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
-                                                <td><Form.Control type="text" name="application" value={newEntry.application || ''} onChange={handleChange} /></td>
+                                                <td>
+                                                    <Form.Control as="select" name="application" value={newEntry.application || ''} onChange={handleChange}>
+                                                        <option value="">Select Application</option>
+                                                        <option value="Telesales">Telesales</option>
+                                                        <option value="Clinical">Clinical</option>
+                                                        <option value="GC ELV">GC ELV</option>
+                                                        <option value="GC Carelon">GC Carelon</option>
+                                                        <option value="CCVR Blue ELV - DVA">CCVR Blue ELV - DVA</option>
+                                                        <option value="CCVR Green ELV - DVA">CCVR Green ELV - DVA</option>
+                                                        <option value="CCVR Blue ELV">CCVR Blue ELV</option>
+                                                        <option value="CCVR Green ELV">CCVR Green ELV</option>
+                                                        <option value="CCVR Blue Carelon">CCVR Blue Carelon</option>
+                                                        <option value="CCVR Green Carelon">CCVR Green Carelon</option>
+                                                    </Form.Control>
+                                                </td>
                                                 <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
+                                                <td>
+                                                    <Form.Control as="select" name="region" value={newEntry.region || 'us-east-1'} onChange={handleChange}>
+                                                        <option value="us-east-1">us-east-1</option>
+                                                        <option value="us-west-2">us-west-2</option>
+                                                    </Form.Control>
+                                                </td>
                                                 <td>
                                                     <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
                                                     <Button variant="link" onClick={() => setEditingRow({ type: null, index: null })}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
@@ -705,6 +894,7 @@ export default function DeploymentDetailsAWS() {
                                                 <td>{role.owner}</td>
                                                 <td>{role.application}</td>
                                                 <td>{role.scrum_team}</td>
+                                                <td>{role.region}</td>
                                                 <td>
                                                     {authState.isAuthenticated ? (
                                                         <>
@@ -729,8 +919,28 @@ export default function DeploymentDetailsAWS() {
                                         <td><Form.Control type="text" name="name" value={newEntry.name || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="permissions" value={newEntry.permissions || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
-                                        <td><Form.Control type="text" name="application" value={newEntry.application || ''} onChange={handleChange} /></td>
+                                        <td>
+                                            <Form.Control as="select" name="application" value={newEntry.application || ''} onChange={handleChange}>
+                                                <option value="">Select Application</option>
+                                                <option value="Telesales">Telesales</option>
+                                                <option value="Clinical">Clinical</option>
+                                                <option value="GC ELV">GC ELV</option>
+                                                <option value="GC Carelon">GC Carelon</option>
+                                                <option value="CCVR Blue ELV - DVA">CCVR Blue ELV - DVA</option>
+                                                <option value="CCVR Green ELV - DVA">CCVR Green ELV - DVA</option>
+                                                <option value="CCVR Blue ELV">CCVR Blue ELV</option>
+                                                <option value="CCVR Green ELV">CCVR Green ELV</option>
+                                                <option value="CCVR Blue Carelon">CCVR Blue Carelon</option>
+                                                <option value="CCVR Green Carelon">CCVR Green Carelon</option>
+                                            </Form.Control>
+                                        </td>
                                         <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
+                                        <td>
+                                            <Form.Control as="select" name="region" value={newEntry.region || 'us-east-1'} onChange={handleChange}>
+                                                <option value="us-east-1">us-east-1</option>
+                                                <option value="us-west-2">us-west-2</option>
+                                            </Form.Control>
+                                        </td>
                                         <td>
                                             <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
                                             <Button variant="link" onClick={() => setEditingRow({ type: null, index: null })}><FaTimes style={{ fontSize: '1.2em', color: 'black' }} /></Button>
@@ -750,6 +960,7 @@ export default function DeploymentDetailsAWS() {
                                     <th>Stream Name</th>
                                     <th>Application</th>
                                     <th>Owner</th>
+                                    <th>Region</th>
                                     <th>Comments</th>
                                     <th>Actions</th>
                                 </tr>
@@ -760,8 +971,28 @@ export default function DeploymentDetailsAWS() {
                                         {editingRow.type === 'kds' && editingRow.index === index ? (
                                             <>
                                                 <td><Form.Control type="text" name="stream_name" value={newEntry.stream_name || ''} onChange={handleChange} /></td>
-                                                <td><Form.Control type="text" name="application" value={newEntry.application || ''} onChange={handleChange} /></td>
+                                                <td>
+                                                    <Form.Control as="select" name="application" value={newEntry.application || ''} onChange={handleChange}>
+                                                        <option value="">Select Application</option>
+                                                        <option value="Telesales">Telesales</option>
+                                                        <option value="Clinical">Clinical</option>
+                                                        <option value="GC ELV">GC ELV</option>
+                                                        <option value="GC Carelon">GC Carelon</option>
+                                                        <option value="CCVR Blue ELV - DVA">CCVR Blue ELV - DVA</option>
+                                                        <option value="CCVR Green ELV - DVA">CCVR Green ELV - DVA</option>
+                                                        <option value="CCVR Blue ELV">CCVR Blue ELV</option>
+                                                        <option value="CCVR Green ELV">CCVR Green ELV</option>
+                                                        <option value="CCVR Blue Carelon">CCVR Blue Carelon</option>
+                                                        <option value="CCVR Green Carelon">CCVR Green Carelon</option>
+                                                    </Form.Control>
+                                                </td>
                                                 <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                                <td>
+                                                    <Form.Control as="select" name="region" value={newEntry.region || 'us-east-1'} onChange={handleChange}>
+                                                        <option value="us-east-1">us-east-1</option>
+                                                        <option value="us-west-2">us-west-2</option>
+                                                    </Form.Control>
+                                                </td>
                                                 <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
                                                 <td>
                                                     <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
@@ -773,6 +1004,7 @@ export default function DeploymentDetailsAWS() {
                                                 <td>{stream.stream_name}</td>
                                                 <td>{stream.application}</td>
                                                 <td>{stream.owner}</td>
+                                                <td>{stream.region}</td>
                                                 <td>{stream.comments}</td>
                                                 <td>
                                                     {authState.isAuthenticated ? (
@@ -796,8 +1028,28 @@ export default function DeploymentDetailsAWS() {
                                 {editingRow.type === 'kds' && editingRow.index === data.kds.length && (
                                     <tr>
                                         <td><Form.Control type="text" name="stream_name" value={newEntry.stream_name || ''} onChange={handleChange} /></td>
-                                        <td><Form.Control type="text" name="application" value={newEntry.application || ''} onChange={handleChange} /></td>
+                                        <td>
+                                            <Form.Control as="select" name="application" value={newEntry.application || ''} onChange={handleChange}>
+                                                <option value="">Select Application</option>
+                                                <option value="Telesales">Telesales</option>
+                                                <option value="Clinical">Clinical</option>
+                                                <option value="GC ELV">GC ELV</option>
+                                                <option value="GC Carelon">GC Carelon</option>
+                                                <option value="CCVR Blue ELV - DVA">CCVR Blue ELV - DVA</option>
+                                                <option value="CCVR Green ELV - DVA">CCVR Green ELV - DVA</option>
+                                                <option value="CCVR Blue ELV">CCVR Blue ELV</option>
+                                                <option value="CCVR Green ELV">CCVR Green ELV</option>
+                                                <option value="CCVR Blue Carelon">CCVR Blue Carelon</option>
+                                                <option value="CCVR Green Carelon">CCVR Green Carelon</option>
+                                            </Form.Control>
+                                        </td>
                                         <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                        <td>
+                                            <Form.Control as="select" name="region" value={newEntry.region || 'us-east-1'} onChange={handleChange}>
+                                                <option value="us-east-1">us-east-1</option>
+                                                <option value="us-west-2">us-west-2</option>
+                                            </Form.Control>
+                                        </td>
                                         <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
                                         <td>
                                             <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
@@ -821,6 +1073,7 @@ export default function DeploymentDetailsAWS() {
                                     <th>Scrum Team</th>
                                     <th>Notifications</th>
                                     <th>Life Cycle</th>
+                                    <th>Region</th>
                                     <th>Comments</th>
                                     <th>Actions</th>
                                 </tr>
@@ -831,11 +1084,31 @@ export default function DeploymentDetailsAWS() {
                                         {editingRow.type === 's3' && editingRow.index === index ? (
                                             <>
                                                 <td><Form.Control type="text" name="bucket_name" value={newEntry.bucket_name || ''} onChange={handleChange} /></td>
-                                                <td><Form.Control type="text" name="application" value={newEntry.application || ''} onChange={handleChange} /></td>
+                                                <td>
+                                                    <Form.Control as="select" name="application" value={newEntry.application || ''} onChange={handleChange}>
+                                                        <option value="">Select Application</option>
+                                                        <option value="Telesales">Telesales</option>
+                                                        <option value="Clinical">Clinical</option>
+                                                        <option value="GC ELV">GC ELV</option>
+                                                        <option value="GC Carelon">GC Carelon</option>
+                                                        <option value="CCVR Blue ELV - DVA">CCVR Blue ELV - DVA</option>
+                                                        <option value="CCVR Green ELV - DVA">CCVR Green ELV - DVA</option>
+                                                        <option value="CCVR Blue ELV">CCVR Blue ELV</option>
+                                                        <option value="CCVR Green ELV">CCVR Green ELV</option>
+                                                        <option value="CCVR Blue Carelon">CCVR Blue Carelon</option>
+                                                        <option value="CCVR Green Carelon">CCVR Green Carelon</option>
+                                                    </Form.Control>
+                                                </td>
                                                 <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="notifications" value={newEntry.notifications || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="life_cycle" value={newEntry.life_cycle || ''} onChange={handleChange} /></td>
+                                                <td>
+                                                    <Form.Control as="select" name="region" value={newEntry.region || 'us-east-1'} onChange={handleChange}>
+                                                        <option value="us-east-1">us-east-1</option>
+                                                        <option value="us-west-2">us-west-2</option>
+                                                    </Form.Control>
+                                                </td>
                                                 <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
                                                 <td>
                                                     <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
@@ -850,6 +1123,7 @@ export default function DeploymentDetailsAWS() {
                                                 <td>{bucket.scrum_team}</td>
                                                 <td>{bucket.notifications}</td>
                                                 <td>{bucket.life_cycle}</td>
+                                                <td>{bucket.region}</td>
                                                 <td>{bucket.comments}</td>
                                                 <td>
                                                     {authState.isAuthenticated ? (
@@ -873,11 +1147,31 @@ export default function DeploymentDetailsAWS() {
                                 {editingRow.type === 's3' && editingRow.index === data.s3.length && (
                                     <tr>
                                         <td><Form.Control type="text" name="bucket_name" value={newEntry.bucket_name || ''} onChange={handleChange} /></td>
-                                        <td><Form.Control type="text" name="application" value={newEntry.application || ''} onChange={handleChange} /></td>
+                                        <td>
+                                            <Form.Control as="select" name="application" value={newEntry.application || ''} onChange={handleChange}>
+                                                <option value="">Select Application</option>
+                                                <option value="Telesales">Telesales</option>
+                                                <option value="Clinical">Clinical</option>
+                                                <option value="GC ELV">GC ELV</option>
+                                                <option value="GC Carelon">GC Carelon</option>
+                                                <option value="CCVR Blue ELV - DVA">CCVR Blue ELV - DVA</option>
+                                                <option value="CCVR Green ELV - DVA">CCVR Green ELV - DVA</option>
+                                                <option value="CCVR Blue ELV">CCVR Blue ELV</option>
+                                                <option value="CCVR Green ELV">CCVR Green ELV</option>
+                                                <option value="CCVR Blue Carelon">CCVR Blue Carelon</option>
+                                                <option value="CCVR Green Carelon">CCVR Green Carelon</option>
+                                            </Form.Control>
+                                        </td>
                                         <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="notifications" value={newEntry.notifications || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="life_cycle" value={newEntry.life_cycle || ''} onChange={handleChange} /></td>
+                                        <td>
+                                            <Form.Control as="select" name="region" value={newEntry.region || 'us-east-1'} onChange={handleChange}>
+                                                <option value="us-east-1">us-east-1</option>
+                                                <option value="us-west-2">us-west-2</option>
+                                            </Form.Control>
+                                        </td>
                                         <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
                                         <td>
                                             <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
@@ -899,6 +1193,7 @@ export default function DeploymentDetailsAWS() {
                                     <th>Owner</th>
                                     <th>Scrum Team</th>
                                     <th>Details</th>
+                                    <th>Region</th>
                                     <th>Comments</th>
                                     <th>Actions</th>
                                 </tr>
@@ -912,6 +1207,12 @@ export default function DeploymentDetailsAWS() {
                                                 <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="details" value={newEntry.details || ''} onChange={handleChange} /></td>
+                                                <td>
+                                                    <Form.Control as="select" name="region" value={newEntry.region || 'us-east-1'} onChange={handleChange}>
+                                                        <option value="us-east-1">us-east-1</option>
+                                                        <option value="us-west-2">us-west-2</option>
+                                                    </Form.Control>
+                                                </td>
                                                 <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
                                                 <td>
                                                     <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
@@ -924,6 +1225,7 @@ export default function DeploymentDetailsAWS() {
                                                 <td>{item.owner}</td>
                                                 <td>{item.scrum_team}</td>
                                                 <td>{item.details}</td>
+                                                <td>{item.region}</td>
                                                 <td>{item.comments}</td>
                                                 <td>
                                                     {authState.isAuthenticated ? (
@@ -950,6 +1252,12 @@ export default function DeploymentDetailsAWS() {
                                         <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="details" value={newEntry.details || ''} onChange={handleChange} /></td>
+                                        <td>
+                                            <Form.Control as="select" name="region" value={newEntry.region || 'us-east-1'} onChange={handleChange}>
+                                                <option value="us-east-1">us-east-1</option>
+                                                <option value="us-west-2">us-west-2</option>
+                                            </Form.Control>
+                                        </td>
                                         <td><Form.Control type="text" name="comments" value={newEntry.comments || ''} onChange={handleChange} /></td>
                                         <td>
                                             <Button variant="link" onClick={handleSave}><FaSave style={{ fontSize: '1.2em', color: 'black' }} /></Button>
