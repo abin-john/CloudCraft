@@ -1,6 +1,14 @@
-body {
-    background-color: #d3d3d3; /* Light grey */
-    color: #000; /* Black text */
-    margin: 0; /* Remove default margin */
-    font-family: Arial, sans-serif;
-  }
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.app-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.content-wrapper {
+    flex: 1;
+}

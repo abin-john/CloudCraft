@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Table, Container, Spinner, Alert, Button } from "react-bootstrap";
 import { useNavigate, Outlet, useLocation } from 'react-router';
-import NavBar from "./NavBar"
 
 export default function DeploymentRoster() {
     const [data, setData] = useState([]);
@@ -49,7 +48,6 @@ export default function DeploymentRoster() {
 
     return (
         <>
-            <NavBar></NavBar>
             <Container fluid className="mt-4">
                 {!isDetailsPage && (
                     <>

@@ -6,6 +6,8 @@ import { LoginCallback } from '@okta/okta-react';
 import { Security } from '@okta/okta-react';
 import { RequiredAuth } from './components/SecureRoute';
 import config from './config';
+import NavBar from "./components/NavBar"
+import Footer from "./components/Footer"
 import Home from "./components/Home";
 import NewPage from "./components/NewPage";
 import Loading from './components/Loading';
@@ -23,17 +25,23 @@ function App() {
 
   return (
     <Security oktaAuth={oktaAuth} restoreOriginalUri={restoreOriginalUri}>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/new" element={<RequiredAuth />}>
-          <Route path="" element={<NewPage />} />
-        </Route>
-        <Route path="/deploymentroster" element={<DeploymentRoster />}>
-          <Route path="details/aws/:date/:provider" element={<DeploymentDetailsAWS />} />
-          <Route path="details/gc/:date/:provider" element={<DeploymentDetailsGC />} />
-        </Route>
-        <Route path="login/callback" element={<LoginCallback loadingElement={<Loading />} />} />
-      </Routes>
+      <div className="app-wrapper">
+        <div className="content-wrapper">
+          <NavBar></NavBar>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/new" element={<RequiredAuth />}>
+              <Route path="" element={<NewPage />} />
+            </Route>
+            <Route path="/deploymentroster" element={<DeploymentRoster />}>
+              <Route path="details/aws/:date/:provider" element={<DeploymentDetailsAWS />} />
+              <Route path="details/gc/:date/:provider" element={<DeploymentDetailsGC />} />
+            </Route>
+            <Route path="login/callback" element={<LoginCallback loadingElement={<Loading />} />} />
+          </Routes>
+        </div>
+        <Footer></Footer>
+      </div>
     </Security>
   );
 }
