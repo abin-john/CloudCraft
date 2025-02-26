@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import { useState, useEffect } from 'react';
 import { Container, Table, Button, Form, Spinner, Alert, OverlayTrigger, Tooltip, Tab, Tabs } from 'react-bootstrap';
 import { FaPlus, FaEdit, FaTrash, FaSave, FaTimes } from 'react-icons/fa';

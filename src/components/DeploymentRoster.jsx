@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Table, Container, Spinner, Alert, Button } from "react-bootstrap";
 import { useNavigate, Outlet, useLocation } from 'react-router';
+import { useOktaAuth } from '@okta/okta-react';
 
 export default function DeploymentRoster() {
     const [data, setData] = useState([]);
@@ -8,6 +9,19 @@ export default function DeploymentRoster() {
     const [error, setError] = useState(null);
     const navigate = useNavigate();
     const location = useLocation();
+
+    const { authState, oktaAuth } = useOktaAuth();
+    const [userName, setUserName] = useState('');
+
+    useEffect(() => {
+        if (authState && authState.isAuthenticated) {
+            const userInfo = async () => {
+                const user = await oktaAuth.getUser();
+                setUserName(user.name);
+            };
+            userInfo();
+        }
+    }, [authState, oktaAuth]);
 
     useEffect(() => {
         fetch("https://62xa9k0qje.execute-api.us-east-1.amazonaws.com/dev/deploymentroster")
@@ -52,6 +66,7 @@ export default function DeploymentRoster() {
                 {!isDetailsPage && (
                     <>
                         <h2>Deployment Roster</h2>
+                        <p>Welcome, {userName}</p>
                         <Table responsive hover>
                             <thead className="bg-primary text-white">
                                 <tr>
