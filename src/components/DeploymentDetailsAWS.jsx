@@ -167,11 +167,15 @@ export default function DeploymentDetailsAWS() {
         }));
     };
 
+
+
     const renderTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props}>
-            Please log in to perform this action.
+            {data.locked_by ? 'Can\'t Edit?, you ran out of time!' : 'Please log in to perform this action.'}
         </Tooltip>
     );
+
+    const isLocked = !!data.locked_by;
 
     return (
         <>
@@ -194,6 +198,10 @@ export default function DeploymentDetailsAWS() {
                         <tr>
                             <th>Last Updated User</th>
                             <td>{data.last_updated_usr}</td>
+                        </tr>
+                        <tr>
+                            <th>Locked By</th>
+                            <td>{data.locked_by}</td>
                         </tr>
                     </tbody>
                 </Table>
@@ -272,8 +280,12 @@ export default function DeploymentDetailsAWS() {
                                                 <td>
                                                     {authState.isAuthenticated ? (
                                                         <>
-                                                            <Button variant="link" onClick={() => handleEdit('lambda', index)}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                                                            <Button variant="link" onClick={() => handleDelete('lambda', index)}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                            <OverlayTrigger placement="top" overlay={renderTooltip}>
+                                                                <span className="d-inline-block">
+                                                                    <Button variant="link" onClick={() => handleEdit('lambda', index)} disabled={isLocked}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                                    <Button variant="link" onClick={() => handleDelete('lambda', index)} disabled={isLocked}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                                </span>
+                                                            </OverlayTrigger>
                                                         </>
                                                     ) : (
                                                         <OverlayTrigger placement="top" overlay={renderTooltip}>
