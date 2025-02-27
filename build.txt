@@ -1,0 +1,21 @@
+GitHub Copilot
+To handle multiple environment builds in a Vite project, you can create different environment configuration files and use them during the build process. Vite supports environment variables through .env files.
+
+Here's how you can set up multiple environment builds:
+
+Create Environment Files: Create different .env files for each environment in the root of your project. For example:
+
+.env.development
+.env.staging
+.env.production
+Each file should contain the environment-specific variables. For example, .env.development might look like this:
+
+Update vite.config.js: Ensure your vite.config.js file is set up to use the environment variables. Vite automatically loads the appropriate .env file based on the NODE_ENV or MODE environment variable.
+
+Update package.json Scripts: Add scripts to your package.json to build for different environments. For example:
+
+Run the Build Command: Use the appropriate script to build for the desired environment. For example, to build for staging:
+
+Here's an example of how your package.json might look:
+
+By following these steps, you can easily manage multiple environment builds for your Vite project.

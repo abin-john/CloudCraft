@@ -52,6 +52,11 @@ export default function DeploymentDetailsAWS() {
     };
 
     const handleDelete = (type, index) => {
+        const isConfirmed = window.confirm("Are you sure you want to delete this item?");
+        if (!isConfirmed) {
+            return;
+        }
+
         const itemToDelete = { ...data[type][index], userName };
 
         fetch(`https://62xa9k0qje.execute-api.us-east-1.amazonaws.com/dev/deploymentroster?date=${date}&provider=${provider}&service=${type}`, {
@@ -171,7 +176,7 @@ export default function DeploymentDetailsAWS() {
 
     const renderTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props}>
-            {data.locked_by ? 'Can\'t Edit?, you ran out of time!' : 'Please log in to perform this action.'}
+            {authState.isAuthenticated ? (data.locked_by ? 'You ran out of time!' : '') : 'Please log in to perform this action.'}
         </Tooltip>
     );
 
