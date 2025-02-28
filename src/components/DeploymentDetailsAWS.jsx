@@ -1,6 +1,6 @@
 import { useParams } from 'react-router';
 import { useState, useEffect } from 'react';
-import { Container, Table, Button, Form, Spinner, Alert, OverlayTrigger, Tooltip, Tab, Tabs } from 'react-bootstrap';
+import { Container, Table, Button, Form, Spinner, Alert, OverlayTrigger, Tooltip, Tab, Tabs, Card, Col, Row, Badge } from 'react-bootstrap';
 import { FaPlus, FaEdit, FaTrash, FaSave, FaTimes } from 'react-icons/fa';
 import { useOktaAuth } from '@okta/okta-react';
 
@@ -176,40 +176,27 @@ export default function DeploymentDetailsAWS() {
 
     const renderTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props}>
-            {authState.isAuthenticated ? (data.locked_by ? 'You ran out of time!' : '') : 'Please log in to perform this action.'}
+            {authState.isAuthenticated ? (isLocked ? 'You ran out of time!' : 'Click!') : 'Please log in to perform this action.'}
         </Tooltip>
     );
-
     const isLocked = !!data.locked_by;
 
     return (
         <>
             <Container fluid className="mt-4">
-                <h2>Deployment Details (AWS)</h2>
-                <Table striped bordered hover>
-                    <tbody>
-                        <tr>
-                            <th>Date</th>
-                            <td>{data.date}</td>
-                        </tr>
-                        <tr>
-                            <th>Cloud Provider</th>
-                            <td>{data.provider}</td>
-                        </tr>
-                        <tr>
-                            <th>Created User</th>
-                            <td>{data.created_usr}</td>
-                        </tr>
-                        <tr>
-                            <th>Last Updated User</th>
-                            <td>{data.last_updated_usr}</td>
-                        </tr>
-                        <tr>
-                            <th>Locked By</th>
-                            <td>{data.locked_by}</td>
-                        </tr>
-                    </tbody>
-                </Table>
+                <h3>AWS Deployment Request : {data.date} </h3>
+                <Card>
+                    <Card.Body>
+                        <Row>
+                            <Col md={6}>
+                                <Card.Text><strong>Created User:</strong> {data.created_usr}</Card.Text>
+                            </Col>
+                            <Col md={6}>
+                                <strong>Locked By:</strong> {data.locked_by ? <Badge bg="danger">{data.locked_by}</Badge> : 'Unlocked'}
+                            </Col>
+                        </Row>
+                    </Card.Body>
+                </Card>
             </Container>
 
             <Container fluid className="mt-4">
@@ -344,7 +331,20 @@ export default function DeploymentDetailsAWS() {
                                 )}
                             </tbody>
                             {authState.isAuthenticated && (
-                                <Button variant="link" onClick={() => handleAddRow('lambda')}><FaPlus style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                <OverlayTrigger placement="top" overlay={renderTooltip}>
+                                    <div className="d-inline-block" style={{ position: 'relative' }}>
+                                        <span style={{ display: 'inline-block', cursor: isLocked ? 'not-allowed' : 'pointer' }}>
+                                            <Button
+                                                variant="link"
+                                                onClick={() => handleAddRow('lambda')}
+                                                disabled={isLocked}
+                                                style={{ pointerEvents: isLocked ? 'none' : 'auto' }}
+                                            >
+                                                <FaPlus style={{ fontSize: '1.2em', color: 'black' }} />
+                                            </Button>
+                                        </span>
+                                    </div>
+                                </OverlayTrigger>
                             )}
                         </Table>
                     </Tab>
@@ -408,8 +408,12 @@ export default function DeploymentDetailsAWS() {
                                                 <td>
                                                     {authState.isAuthenticated ? (
                                                         <>
-                                                            <Button variant="link" onClick={() => handleEdit('contact_flows', index)}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                                                            <Button variant="link" onClick={() => handleDelete('contact_flows', index)}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                            <OverlayTrigger placement="top" overlay={renderTooltip}>
+                                                                <span className="d-inline-block">
+                                                                    <Button variant="link" onClick={() => handleEdit('contact_flows', index)} disabled={isLocked}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                                    <Button variant="link" onClick={() => handleDelete('contact_flows', index)} disabled={isLocked}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                                </span>
+                                                            </OverlayTrigger>
                                                         </>
                                                     ) : (
                                                         <OverlayTrigger placement="top" overlay={renderTooltip}>
@@ -459,7 +463,17 @@ export default function DeploymentDetailsAWS() {
                                 )}
                             </tbody>
                             {authState.isAuthenticated && (
-                                <Button variant="link" onClick={() => handleAddRow('contact_flows')}><FaPlus style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                <OverlayTrigger placement="top" overlay={renderTooltip}>
+                                    <div className="d-inline-block" style={{ position: 'relative' }}>
+                                        <span style={{ display: 'inline-block', cursor: isLocked ? 'not-allowed' : 'pointer' }}>
+                                            <Button variant="link" onClick={() => handleAddRow('contact_flows')} disabled={isLocked} style={{ pointerEvents: isLocked ? 'none' : 'auto' }}
+                                            >
+                                                <FaPlus style={{ fontSize: '1.2em', color: 'black' }} />
+                                            </Button>
+                                        </span>
+                                    </div>
+                                </OverlayTrigger>
+
                             )}
                         </Table>
                     </Tab>
@@ -518,8 +532,12 @@ export default function DeploymentDetailsAWS() {
                                                 <td>
                                                     {authState.isAuthenticated ? (
                                                         <>
-                                                            <Button variant="link" onClick={() => handleEdit('api_gateway', index)}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                                                            <Button variant="link" onClick={() => handleDelete('api_gateway', index)}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                            <OverlayTrigger placement="top" overlay={renderTooltip}>
+                                                                <span className="d-inline-block">
+                                                                    <Button variant="link" onClick={() => handleEdit('api_gateway', index)} disabled={isLocked}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                                    <Button variant="link" onClick={() => handleDelete('api_gateway', index)} disabled={isLocked}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                                </span>
+                                                            </OverlayTrigger>
                                                         </>
                                                     ) : (
                                                         <OverlayTrigger placement="top" overlay={renderTooltip}>
@@ -558,7 +576,16 @@ export default function DeploymentDetailsAWS() {
                                 )}
                             </tbody>
                             {authState.isAuthenticated && (
-                                <Button variant="link" onClick={() => handleAddRow('api_gateway')}><FaPlus style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                <OverlayTrigger placement="top" overlay={renderTooltip}>
+                                    <div className="d-inline-block" style={{ position: 'relative' }}>
+                                        <span style={{ display: 'inline-block', cursor: isLocked ? 'not-allowed' : 'pointer' }}>
+                                            <Button variant="link" onClick={() => handleAddRow('api_gateway')} disabled={isLocked} style={{ pointerEvents: isLocked ? 'none' : 'auto' }}
+                                            >
+                                                <FaPlus style={{ fontSize: '1.2em', color: 'black' }} />
+                                            </Button>
+                                        </span>
+                                    </div>
+                                </OverlayTrigger>
                             )}
                         </Table>
                     </Tab >
@@ -604,8 +631,12 @@ export default function DeploymentDetailsAWS() {
                                                 <td>
                                                     {authState.isAuthenticated ? (
                                                         <>
-                                                            <Button variant="link" onClick={() => handleEdit('dynamo_db_script', index)}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                                                            <Button variant="link" onClick={() => handleDelete('dynamo_db_script', index)}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                            <OverlayTrigger placement="top" overlay={renderTooltip}>
+                                                                <span className="d-inline-block">
+                                                                    <Button variant="link" onClick={() => handleEdit('dynamo_db_script', index)} disabled={isLocked}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                                    <Button variant="link" onClick={() => handleDelete('dynamo_db_script', index)} disabled={isLocked}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                                </span>
+                                                            </OverlayTrigger>
                                                         </>
                                                     ) : (
                                                         <OverlayTrigger placement="top" overlay={renderTooltip}>
@@ -640,7 +671,16 @@ export default function DeploymentDetailsAWS() {
                                 )}
                             </tbody>
                             {authState.isAuthenticated && (
-                                <Button variant="link" onClick={() => handleAddRow('dynamo_db_script')}><FaPlus style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                <OverlayTrigger placement="top" overlay={renderTooltip}>
+                                    <div className="d-inline-block" style={{ position: 'relative' }}>
+                                        <span style={{ display: 'inline-block', cursor: isLocked ? 'not-allowed' : 'pointer' }}>
+                                            <Button variant="link" onClick={() => handleAddRow('dynamo_db_script')} disabled={isLocked} style={{ pointerEvents: isLocked ? 'none' : 'auto' }}
+                                            >
+                                                <FaPlus style={{ fontSize: '1.2em', color: 'black' }} />
+                                            </Button>
+                                        </span>
+                                    </div>
+                                </OverlayTrigger>
                             )}
                         </Table>
                     </Tab>
@@ -712,8 +752,12 @@ export default function DeploymentDetailsAWS() {
                                                 <td>
                                                     {authState.isAuthenticated ? (
                                                         <>
-                                                            <Button variant="link" onClick={() => handleEdit('ui', index)}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                                                            <Button variant="link" onClick={() => handleDelete('ui', index)}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                            <OverlayTrigger placement="top" overlay={renderTooltip}>
+                                                                <span className="d-inline-block">
+                                                                    <Button variant="link" onClick={() => handleEdit('ui', index)} disabled={isLocked}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                                    <Button variant="link" onClick={() => handleDelete('ui', index)} disabled={isLocked}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                                </span>
+                                                            </OverlayTrigger>
                                                         </>
                                                     ) : (
                                                         <OverlayTrigger placement="top" overlay={renderTooltip}>
@@ -766,7 +810,16 @@ export default function DeploymentDetailsAWS() {
                                 )}
                             </tbody>
                             {authState.isAuthenticated && (
-                                <Button variant="link" onClick={() => handleAddRow('ui')}><FaPlus style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                <OverlayTrigger placement="top" overlay={renderTooltip}>
+                                    <div className="d-inline-block" style={{ position: 'relative' }}>
+                                        <span style={{ display: 'inline-block', cursor: isLocked ? 'not-allowed' : 'pointer' }}>
+                                            <Button variant="link" onClick={() => handleAddRow('ui')} disabled={isLocked} style={{ pointerEvents: isLocked ? 'none' : 'auto' }}
+                                            >
+                                                <FaPlus style={{ fontSize: '1.2em', color: 'black' }} />
+                                            </Button>
+                                        </span>
+                                    </div>
+                                </OverlayTrigger>
                             )}
                         </Table>
                     </Tab>
@@ -815,8 +868,12 @@ export default function DeploymentDetailsAWS() {
                                                 <td>
                                                     {authState.isAuthenticated ? (
                                                         <>
-                                                            <Button variant="link" onClick={() => handleEdit('event_bridge', index)}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                                                            <Button variant="link" onClick={() => handleDelete('event_bridge', index)}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                            <OverlayTrigger placement="top" overlay={renderTooltip}>
+                                                                <span className="d-inline-block">
+                                                                    <Button variant="link" onClick={() => handleEdit('event_bridge', index)} disabled={isLocked}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                                    <Button variant="link" onClick={() => handleDelete('event_bridge', index)} disabled={isLocked}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                                </span>
+                                                            </OverlayTrigger>
                                                         </>
                                                     ) : (
                                                         <OverlayTrigger placement="top" overlay={renderTooltip}>
@@ -852,7 +909,16 @@ export default function DeploymentDetailsAWS() {
                                 )}
                             </tbody>
                             {authState.isAuthenticated && (
-                                <Button variant="link" onClick={() => handleAddRow('event_bridge')}><FaPlus style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                <OverlayTrigger placement="top" overlay={renderTooltip}>
+                                    <div className="d-inline-block" style={{ position: 'relative' }}>
+                                        <span style={{ display: 'inline-block', cursor: isLocked ? 'not-allowed' : 'pointer' }}>
+                                            <Button variant="link" onClick={() => handleAddRow('event_bridge')} disabled={isLocked} style={{ pointerEvents: isLocked ? 'none' : 'auto' }}
+                                            >
+                                                <FaPlus style={{ fontSize: '1.2em', color: 'black' }} />
+                                            </Button>
+                                        </span>
+                                    </div>
+                                </OverlayTrigger>
                             )}
                         </Table>
                     </Tab>
@@ -915,8 +981,12 @@ export default function DeploymentDetailsAWS() {
                                                 <td>
                                                     {authState.isAuthenticated ? (
                                                         <>
-                                                            <Button variant="link" onClick={() => handleEdit('iam_role', index)}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                                                            <Button variant="link" onClick={() => handleDelete('iam_role', index)}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                            <OverlayTrigger placement="top" overlay={renderTooltip}>
+                                                                <span className="d-inline-block">
+                                                                    <Button variant="link" onClick={() => handleEdit('iam_role', index)} disabled={isLocked}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                                    <Button variant="link" onClick={() => handleDelete('iam_role', index)} disabled={isLocked}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                                </span>
+                                                            </OverlayTrigger>
                                                         </>
                                                     ) : (
                                                         <OverlayTrigger placement="top" overlay={renderTooltip}>
@@ -966,7 +1036,16 @@ export default function DeploymentDetailsAWS() {
                                 )}
                             </tbody>
                             {authState.isAuthenticated && (
-                                <Button variant="link" onClick={() => handleAddRow('iam_role')}><FaPlus style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                <OverlayTrigger placement="top" overlay={renderTooltip}>
+                                    <div className="d-inline-block" style={{ position: 'relative' }}>
+                                        <span style={{ display: 'inline-block', cursor: isLocked ? 'not-allowed' : 'pointer' }}>
+                                            <Button variant="link" onClick={() => handleAddRow('iam_role')} disabled={isLocked} style={{ pointerEvents: isLocked ? 'none' : 'auto' }}
+                                            >
+                                                <FaPlus style={{ fontSize: '1.2em', color: 'black' }} />
+                                            </Button>
+                                        </span>
+                                    </div>
+                                </OverlayTrigger>
                             )}
                         </Table>
                     </Tab>
@@ -1026,8 +1105,12 @@ export default function DeploymentDetailsAWS() {
                                                 <td>
                                                     {authState.isAuthenticated ? (
                                                         <>
-                                                            <Button variant="link" onClick={() => handleEdit('kds', index)}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                                                            <Button variant="link" onClick={() => handleDelete('kds', index)}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                            <OverlayTrigger placement="top" overlay={renderTooltip}>
+                                                                <span className="d-inline-block">
+                                                                    <Button variant="link" onClick={() => handleEdit('kds', index)} disabled={isLocked}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                                    <Button variant="link" onClick={() => handleDelete('kds', index)} disabled={isLocked}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                                </span>
+                                                            </OverlayTrigger>
                                                         </>
                                                     ) : (
                                                         <OverlayTrigger placement="top" overlay={renderTooltip}>
@@ -1076,7 +1159,16 @@ export default function DeploymentDetailsAWS() {
                                 )}
                             </tbody>
                             {authState.isAuthenticated && (
-                                <Button variant="link" onClick={() => handleAddRow('kds')}><FaPlus style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                <OverlayTrigger placement="top" overlay={renderTooltip}>
+                                    <div className="d-inline-block" style={{ position: 'relative' }}>
+                                        <span style={{ display: 'inline-block', cursor: isLocked ? 'not-allowed' : 'pointer' }}>
+                                            <Button variant="link" onClick={() => handleAddRow('kds')} disabled={isLocked} style={{ pointerEvents: isLocked ? 'none' : 'auto' }}
+                                            >
+                                                <FaPlus style={{ fontSize: '1.2em', color: 'black' }} />
+                                            </Button>
+                                        </span>
+                                    </div>
+                                </OverlayTrigger>
                             )}
                         </Table>
                     </Tab>
@@ -1145,8 +1237,12 @@ export default function DeploymentDetailsAWS() {
                                                 <td>
                                                     {authState.isAuthenticated ? (
                                                         <>
-                                                            <Button variant="link" onClick={() => handleEdit('s3', index)}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                                                            <Button variant="link" onClick={() => handleDelete('s3', index)}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                            <OverlayTrigger placement="top" overlay={renderTooltip}>
+                                                                <span className="d-inline-block">
+                                                                    <Button variant="link" onClick={() => handleEdit('s3', index)} disabled={isLocked}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                                    <Button variant="link" onClick={() => handleDelete('s3', index)} disabled={isLocked}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                                </span>
+                                                            </OverlayTrigger>
                                                         </>
                                                     ) : (
                                                         <OverlayTrigger placement="top" overlay={renderTooltip}>
@@ -1198,7 +1294,16 @@ export default function DeploymentDetailsAWS() {
                                 )}
                             </tbody>
                             {authState.isAuthenticated && (
-                                <Button variant="link" onClick={() => handleAddRow('s3')}><FaPlus style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                <OverlayTrigger placement="top" overlay={renderTooltip}>
+                                    <div className="d-inline-block" style={{ position: 'relative' }}>
+                                        <span style={{ display: 'inline-block', cursor: isLocked ? 'not-allowed' : 'pointer' }}>
+                                            <Button variant="link" onClick={() => handleAddRow('s3')} disabled={isLocked} style={{ pointerEvents: isLocked ? 'none' : 'auto' }}
+                                            >
+                                                <FaPlus style={{ fontSize: '1.2em', color: 'black' }} />
+                                            </Button>
+                                        </span>
+                                    </div>
+                                </OverlayTrigger>
                             )}
                         </Table>
                     </Tab>
@@ -1247,14 +1352,18 @@ export default function DeploymentDetailsAWS() {
                                                 <td>
                                                     {authState.isAuthenticated ? (
                                                         <>
-                                                            <Button variant="link" onClick={() => handleEdit('misc', index)}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                                                            <Button variant="link" onClick={() => handleDelete('misc', index)}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                            <OverlayTrigger placement="top" overlay={renderTooltip}>
+                                                                <span className="d-inline-block">
+                                                                    <Button variant="link" onClick={() => handleEdit('s3', index)} disabled={isLocked}><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                                    <Button variant="link" onClick={() => handleDelete('s3', index)} disabled={isLocked}><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                                </span>
+                                                            </OverlayTrigger>
                                                         </>
                                                     ) : (
                                                         <OverlayTrigger placement="top" overlay={renderTooltip}>
                                                             <span className="d-inline-block">
-                                                                <Button variant="link" onClick={() => handleEdit('misc', index)} disabled><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
-                                                                <Button variant="link" onClick={() => handleDelete('misc', index)} disabled><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                                <Button variant="link" onClick={() => handleEdit('s3', index)} disabled><FaEdit style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                                                <Button variant="link" onClick={() => handleDelete('s3', index)} disabled><FaTrash style={{ fontSize: '1.2em', color: 'black' }} /></Button>
                                                             </span>
                                                         </OverlayTrigger>
                                                     )}
@@ -1284,7 +1393,16 @@ export default function DeploymentDetailsAWS() {
                                 )}
                             </tbody>
                             {authState.isAuthenticated && (
-                                <Button variant="link" onClick={() => handleAddRow('misc')}><FaPlus style={{ fontSize: '1.2em', color: 'black' }} /></Button>
+                                <OverlayTrigger placement="top" overlay={renderTooltip}>
+                                    <div className="d-inline-block" style={{ position: 'relative' }}>
+                                        <span style={{ display: 'inline-block', cursor: isLocked ? 'not-allowed' : 'pointer' }}>
+                                            <Button variant="link" onClick={() => handleAddRow('misc')} disabled={isLocked} style={{ pointerEvents: isLocked ? 'none' : 'auto' }}
+                                            >
+                                                <FaPlus style={{ fontSize: '1.2em', color: 'black' }} />
+                                            </Button>
+                                        </span>
+                                    </div>
+                                </OverlayTrigger>
                             )}
                         </Table>
                     </Tab>
