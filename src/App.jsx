@@ -1,4 +1,5 @@
 import './App.css';
+import { useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { OktaAuth, toRelativeUrl } from '@okta/okta-auth-js';
@@ -33,6 +34,39 @@ function App() {
   oktaAuth.tokenManager.on('expired', () => {
     oktaAuth.signOut();
   });
+
+
+  let idleTimeout;
+  const idleTimeLimit = 15 * 60 * 1000;
+
+  const resetIdleTimeout = () => {
+    clearTimeout(idleTimeout);
+    idleTimeout = setTimeout(() => {
+      oktaAuth.signOut();
+    }, idleTimeLimit);
+  };
+
+  const setupIdleTimeout = () => {
+    window.addEventListener('mousemove', resetIdleTimeout);
+    window.addEventListener('keydown', resetIdleTimeout);
+    resetIdleTimeout();
+  };
+
+
+  const activeTimeLimit = 8 * 60 * 60 * 1000;
+  setTimeout(() => {
+    oktaAuth.signOut();
+  }, activeTimeLimit);
+
+
+  useEffect(() => {
+    setupIdleTimeout();
+    return () => {
+      clearTimeout(idleTimeout);
+      window.removeEventListener('mousemove', resetIdleTimeout);
+      window.removeEventListener('keydown', resetIdleTimeout);
+    };
+  }, []);
 
   return (
     <Security oktaAuth={oktaAuth} restoreOriginalUri={restoreOriginalUri}>
