@@ -220,7 +220,7 @@ export default function DeploymentRoster() {
                                 Create Deployment Roster
                             </Button>
                         )}
-                        <Table responsive hover className="mt-3">
+                        <Table responsive hover className="mt-3 text-center">
                             <thead className="bg-primary text-white">
                                 <tr>
                                     <th>Date</th>
