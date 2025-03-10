@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { Table, Container, Spinner, Alert, Button, Modal, Form, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { useNavigate, Outlet, useLocation } from 'react-router';
 import { useOktaAuth } from '@okta/okta-react';
-import { FaTrash, FaLock, FaUnlock } from 'react-icons/fa';
+import { FaTrash, FaLock, FaUnlock, FaDownload } from 'react-icons/fa';
+import { utils, writeFile } from 'xlsx';
 
 export default function DeploymentRoster() {
     const [data, setData] = useState([]);
@@ -148,6 +149,43 @@ export default function DeploymentRoster() {
         }
     };
 
+    const handleDownload = async (date, provider) => {
+        const url = `https://62xa9k0qje.execute-api.us-east-1.amazonaws.com/dev/deploymentroster/details?date=${date}&provider=${provider}`;
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            const data = await response.json();
+            const workbook = utils.book_new();
+
+            const serviceNames = {
+                api_gateway: 'API Gateway',
+                contact_flows: 'Contact Flows',
+                dynamo_db_script: 'DynamoDB Script',
+                event_bridge: 'Event Bridge',
+                iam_role: 'IAM Role',
+                kds: 'KDS',
+                lambda: 'Lambda',
+                lex: 'Lex',
+                misc: 'Misc',
+                s3: 'S3',
+                ui: 'UI'
+            };
+            Object.keys(serviceNames).forEach(service => {
+                if (Array.isArray(data[service]) && data[service].length > 0) {
+                    const worksheet = utils.json_to_sheet(data[service]);
+                    utils.book_append_sheet(workbook, worksheet, serviceNames[service]);
+                }
+            });
+
+            writeFile(workbook, `${date}_${provider}_details.xlsx`);
+        } catch (error) {
+            console.error("Error downloading the file:", error);
+            setError(error.message);
+        }
+    };
+
     const handleRowClick = (item) => {
         const path = item.provider === 'gc' ? 'gc' : 'aws';
         navigate(`/deploymentroster/details/${path}/${item.date}/${item.provider}`);
@@ -221,6 +259,9 @@ export default function DeploymentRoster() {
                                                     <Button variant="link" onClick={() => handleDelete(item.date, item.provider)}>
                                                         <FaTrash style={{ fontSize: '1.2em', color: 'black' }} />
                                                     </Button>
+                                                    <Button variant="link" onClick={() => handleDownload(item.date, item.provider)}>
+                                                        <FaDownload style={{ fontSize: '1.2em', color: 'black' }} />
+                                                    </Button>
                                                 </>
                                             ) : (
                                                 <OverlayTrigger
@@ -242,6 +283,9 @@ export default function DeploymentRoster() {
                                                         </OverlayTrigger>
                                                         <Button variant="link" disabled style={{ pointerEvents: 'none' }}>
                                                             <FaTrash style={{ fontSize: '1.2em', color: 'gray' }} />
+                                                        </Button>
+                                                        <Button variant="link" disabled style={{ pointerEvents: 'none' }}>
+                                                            <FaDownload style={{ fontSize: '1.2em', color: 'gray' }} />
                                                         </Button>
                                                     </span>
                                                 </OverlayTrigger>
