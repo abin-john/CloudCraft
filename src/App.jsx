@@ -15,13 +15,24 @@ import DeploymentRoster from './components/DeploymentRoster';
 import DeploymentDetailsAWS from './components/DeploymentDetailsAWS';
 import DeploymentDetailsGC from './components/DeploymentDetailsGC';
 
-const oktaAuth = new OktaAuth(config.oidc);
+const oktaAuth = new OktaAuth({
+  ...config.oidc,
+  tokenManager: {
+    expireEarlySeconds: 300,
+    autoRenew: true,
+    storage: 'localStorage',
+  }
+});
 
 function App() {
   const navigate = useNavigate();
   const restoreOriginalUri = (_oktaAuth, originalUri) => {
     navigate(toRelativeUrl(originalUri || '/', window.location.origin));
   };
+
+  oktaAuth.tokenManager.on('expired', () => {
+    oktaAuth.signOut();
+  });
 
   return (
     <Security oktaAuth={oktaAuth} restoreOriginalUri={restoreOriginalUri}>
