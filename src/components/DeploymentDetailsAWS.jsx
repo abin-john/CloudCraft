@@ -239,7 +239,7 @@ export default function DeploymentDetailsAWS() {
                                                         <option value="CCVR Green Carelon">CCVR Green Carelon</option>
                                                     </Form.Control>
                                                 </td>
-                                                <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="owner" value={newEntry.owner || userName} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="runtime" value={newEntry.runtime || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="role" value={newEntry.role || ''} onChange={handleChange} /></td>
@@ -310,7 +310,7 @@ export default function DeploymentDetailsAWS() {
                                                 <option value="CCVR Green Carelon">CCVR Green Carelon</option>
                                             </Form.Control>
                                         </td>
-                                        <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="owner" value={newEntry.owner || userName} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="runtime" value={newEntry.runtime || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="role" value={newEntry.role || ''} onChange={handleChange} /></td>
@@ -383,7 +383,7 @@ export default function DeploymentDetailsAWS() {
                                                         <option value="CCVR Green Carelon">CCVR Green Carelon</option>
                                                     </Form.Control>
                                                 </td>
-                                                <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="owner" value={newEntry.owner || userName} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
                                                 <td>
                                                     <Form.Control as="select" name="region" value={newEntry.region || 'us-east-1'} onChange={handleChange}>
@@ -446,7 +446,7 @@ export default function DeploymentDetailsAWS() {
                                                 <option value="CCVR Green Carelon">CCVR Green Carelon</option>
                                             </Form.Control>
                                         </td>
-                                        <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="owner" value={newEntry.owner || userName} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
                                         <td>
                                             <Form.Control as="select" name="region" value={newEntry.region || 'us-east-1'} onChange={handleChange}>
@@ -504,7 +504,7 @@ export default function DeploymentDetailsAWS() {
                                                 <td><Form.Control type="text" name="method" value={newEntry.method || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="authorization" value={newEntry.authorization || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="lambda_function" value={newEntry.lambda_function || ''} onChange={handleChange} /></td>
-                                                <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="owner" value={newEntry.owner || userName} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="api_type" value={newEntry.api_type || ''} onChange={handleChange} /></td>
                                                 <td>
@@ -559,7 +559,7 @@ export default function DeploymentDetailsAWS() {
                                         <td><Form.Control type="text" name="method" value={newEntry.method || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="authorization" value={newEntry.authorization || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="lambda_function" value={newEntry.lambda_function || ''} onChange={handleChange} /></td>
-                                        <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="owner" value={newEntry.owner || userName} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="api_type" value={newEntry.api_type || ''} onChange={handleChange} /></td>
                                         <td>
@@ -608,7 +608,7 @@ export default function DeploymentDetailsAWS() {
                                             <>
                                                 <td><Form.Control type="text" name="script_path" value={newEntry.script_path || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
-                                                <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="owner" value={newEntry.owner || userName} onChange={handleChange} /></td>
                                                 <td>
                                                     <Form.Control as="select" name="region" value={newEntry.region || 'us-east-1'} onChange={handleChange}>
                                                         <option value="us-east-1">us-east-1</option>
@@ -655,7 +655,7 @@ export default function DeploymentDetailsAWS() {
                                     <tr>
                                         <td><Form.Control type="text" name="script_path" value={newEntry.script_path || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
-                                        <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="owner" value={newEntry.owner || userName} onChange={handleChange} /></td>
                                         <td>
                                             <Form.Control as="select" name="region" value={newEntry.region || 'us-east-1'} onChange={handleChange}>
                                                 <option value="us-east-1">us-east-1</option>
@@ -721,7 +721,7 @@ export default function DeploymentDetailsAWS() {
                                                         <option value="CCVR Green Carelon">CCVR Green Carelon</option>
                                                     </Form.Control>
                                                 </td>
-                                                <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="owner" value={newEntry.owner || userName} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="bitbucket_repo" value={newEntry.bitbucket_repo || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="branch" value={newEntry.branch || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="cloudfront_url" value={newEntry.cloudfront_url || ''} onChange={handleChange} /></td>
@@ -790,7 +790,7 @@ export default function DeploymentDetailsAWS() {
                                                 <option value="CCVR Green Carelon">CCVR Green Carelon</option>
                                             </Form.Control>
                                         </td>
-                                        <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="owner" value={newEntry.owner || userName} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="bitbucket_repo" value={newEntry.bitbucket_repo || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="branch" value={newEntry.branch || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="cloudfront_url" value={newEntry.cloudfront_url || ''} onChange={handleChange} /></td>
@@ -942,7 +942,7 @@ export default function DeploymentDetailsAWS() {
                                             <>
                                                 <td><Form.Control type="text" name="name" value={newEntry.name || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="permissions" value={newEntry.permissions || ''} onChange={handleChange} /></td>
-                                                <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="owner" value={newEntry.owner || userName} onChange={handleChange} /></td>
                                                 <td>
                                                     <Form.Control as="select" name="application" value={newEntry.application || ''} onChange={handleChange}>
                                                         <option value="">Select Application</option>
@@ -1005,7 +1005,7 @@ export default function DeploymentDetailsAWS() {
                                     <tr>
                                         <td><Form.Control type="text" name="name" value={newEntry.name || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="permissions" value={newEntry.permissions || ''} onChange={handleChange} /></td>
-                                        <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="owner" value={newEntry.owner || userName} onChange={handleChange} /></td>
                                         <td>
                                             <Form.Control as="select" name="application" value={newEntry.application || ''} onChange={handleChange}>
                                                 <option value="">Select Application</option>
@@ -1082,7 +1082,7 @@ export default function DeploymentDetailsAWS() {
                                                         <option value="CCVR Green Carelon">CCVR Green Carelon</option>
                                                     </Form.Control>
                                                 </td>
-                                                <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="owner" value={newEntry.owner || userName} onChange={handleChange} /></td>
                                                 <td>
                                                     <Form.Control as="select" name="region" value={newEntry.region || 'us-east-1'} onChange={handleChange}>
                                                         <option value="us-east-1">us-east-1</option>
@@ -1143,7 +1143,7 @@ export default function DeploymentDetailsAWS() {
                                                 <option value="CCVR Green Carelon">CCVR Green Carelon</option>
                                             </Form.Control>
                                         </td>
-                                        <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="owner" value={newEntry.owner || userName} onChange={handleChange} /></td>
                                         <td>
                                             <Form.Control as="select" name="region" value={newEntry.region || 'us-east-1'} onChange={handleChange}>
                                                 <option value="us-east-1">us-east-1</option>
@@ -1208,7 +1208,7 @@ export default function DeploymentDetailsAWS() {
                                                         <option value="CCVR Green Carelon">CCVR Green Carelon</option>
                                                     </Form.Control>
                                                 </td>
-                                                <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="owner" value={newEntry.owner || userName} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="notifications" value={newEntry.notifications || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="life_cycle" value={newEntry.life_cycle || ''} onChange={handleChange} /></td>
@@ -1275,7 +1275,7 @@ export default function DeploymentDetailsAWS() {
                                                 <option value="CCVR Green Carelon">CCVR Green Carelon</option>
                                             </Form.Control>
                                         </td>
-                                        <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="owner" value={newEntry.owner || userName} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="notifications" value={newEntry.notifications || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="life_cycle" value={newEntry.life_cycle || ''} onChange={handleChange} /></td>
@@ -1326,7 +1326,7 @@ export default function DeploymentDetailsAWS() {
                                         {editingRow.type === 'misc' && editingRow.index === index ? (
                                             <>
                                                 <td><Form.Control type="text" name="item_name" value={newEntry.item_name || ''} onChange={handleChange} /></td>
-                                                <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="owner" value={newEntry.owner || userName} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="details" value={newEntry.details || ''} onChange={handleChange} /></td>
                                                 <td>
@@ -1375,7 +1375,7 @@ export default function DeploymentDetailsAWS() {
                                 {editingRow.type === 'misc' && editingRow.index === data.misc.length && (
                                     <tr>
                                         <td><Form.Control type="text" name="item_name" value={newEntry.item_name || ''} onChange={handleChange} /></td>
-                                        <td><Form.Control type="text" name="owner" value={newEntry.owner || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="owner" value={newEntry.owner || userName} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="details" value={newEntry.details || ''} onChange={handleChange} /></td>
                                         <td>
