@@ -1,19 +1,12 @@
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { useOktaAuth } from '@okta/okta-react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 export default function NavBar() {
     const { authState, oktaAuth } = useOktaAuth();
     const location = useLocation();
-    const navigate = useNavigate();
     const login = async () => oktaAuth.signInWithRedirect({ originalUri: location.pathname });
-    const logout = async () => {
-        await oktaAuth.signOut();
-        if (location.pathname.startsWith('/new')) {
-            navigate('/');
-        }
-    };
 
     if (!authState) {
         return null;
@@ -43,8 +36,7 @@ export default function NavBar() {
                     <Nav className="ms-auto">
                         {authState.isAuthenticated ? (
                             <>
-                                <Nav.Link>{userName}</Nav.Link>
-                                <Nav.Link onClick={logout}>Logout</Nav.Link>
+                                <Nav.Link>Welcome, {userName}</Nav.Link>
                             </>
                         ) : (
                             <Nav.Link onClick={login}>Login</Nav.Link>
