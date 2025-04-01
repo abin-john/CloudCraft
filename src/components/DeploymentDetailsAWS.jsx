@@ -363,6 +363,7 @@ export default function DeploymentDetailsAWS() {
                             <thead className="bg-primary text-white">
                                 <tr>
                                     <th>Flow Name</th>
+                                    <th>Type</th>
                                     <th>Application</th>
                                     <th>Owner</th>
                                     <th>Scrum Team</th>
@@ -377,6 +378,7 @@ export default function DeploymentDetailsAWS() {
                                         {editingRow.type === 'contact_flows' && editingRow.index === index ? (
                                             <>
                                                 <td><Form.Control type="text" name="flow_name" value={newEntry.flow_name || ''} onChange={handleChange} /></td>
+                                                <td><Form.Control type="text" name="flow_type" value={newEntry.flow_type || ''} onChange={handleChange} /></td>
                                                 <td>
                                                     <Form.Control as="select" name="application" value={newEntry.application || ''} onChange={handleChange}>
                                                         <option value="">Select Application</option>
@@ -409,6 +411,7 @@ export default function DeploymentDetailsAWS() {
                                         ) : (
                                             <>
                                                 <td>{flow.flow_name}</td>
+                                                <td>{flow.flow_type}</td>
                                                 <td>{flow.application}</td>
                                                 <td>{flow.owner}</td>
                                                 <td>{flow.scrum_team}</td>
@@ -440,6 +443,7 @@ export default function DeploymentDetailsAWS() {
                                 {editingRow.type === 'contact_flows' && editingRow.index === data.contact_flows.length && (
                                     <tr>
                                         <td><Form.Control type="text" name="flow_name" value={newEntry.flow_name || ''} onChange={handleChange} /></td>
+                                        <td><Form.Control type="text" name="flow_type" value={newEntry.flow_type || ''} onChange={handleChange} /></td>
                                         <td>
                                             <Form.Control as="select" name="application" value={newEntry.application || ''} onChange={handleChange}>
                                                 <option value="">Select Application</option>
@@ -634,6 +638,7 @@ export default function DeploymentDetailsAWS() {
                         <Table responsive hover>
                             <thead className="bg-primary text-white">
                                 <tr>
+                                    <th>Table Name</th>
                                     <th>Script Path</th>
                                     <th>Application</th>
                                     <th>Scrum Team</th>
@@ -648,6 +653,7 @@ export default function DeploymentDetailsAWS() {
                                     <tr key={index}>
                                         {editingRow.type === 'dynamo_db_script' && editingRow.index === index ? (
                                             <>
+                                                <td><Form.Control type="text" name="name" value={newEntry.name || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="script_path" value={newEntry.script_path || ''} onChange={handleChange} /></td>
                                                 <td>
                                                     <Form.Control as="select" name="application" value={newEntry.application || ''} onChange={handleChange}>
@@ -680,6 +686,7 @@ export default function DeploymentDetailsAWS() {
                                             </>
                                         ) : (
                                             <>
+                                                <td>{entry.name}</td>
                                                 <td>{entry.script_path}</td>
                                                 <td>{entry.application}</td>
                                                 <td>{entry.scrum_team}</td>
@@ -711,6 +718,7 @@ export default function DeploymentDetailsAWS() {
                                 ))}
                                 {editingRow.type === 'dynamo_db_script' && editingRow.index === data.dynamo_db_script.length && (
                                     <tr>
+                                        <td><Form.Control type="text" name="name" value={newEntry.name || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="script_path" value={newEntry.script_path || ''} onChange={handleChange} /></td>
                                         <td>
                                             <Form.Control as="select" name="application" value={newEntry.application || ''} onChange={handleChange}>
