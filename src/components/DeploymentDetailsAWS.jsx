@@ -93,7 +93,16 @@ export default function DeploymentDetailsAWS() {
     };
 
     const handleSave = () => {
-        const postData = { ...newEntry, userName };
+        if (!newEntry.application) {
+            alert('Application name is required');
+            return;
+        }
+        const postData = {
+            ...newEntry,
+            owner: newEntry.owner || userName, // Ensure owner defaults to userName if empty
+            region: newEntry.region || 'us-east-1', // Ensure region defaults to 'us-east-1' if empty
+            userName
+        };
 
         if (editingRow.index === data[currentService].length) {
             // Add new entry
@@ -483,6 +492,7 @@ export default function DeploymentDetailsAWS() {
                             <thead className="bg-primary text-white">
                                 <tr>
                                     <th>API Gateway Name</th>
+                                    <th>Application</th>
                                     <th>Route</th>
                                     <th>Method</th>
                                     <th>Authorization</th>
@@ -500,6 +510,21 @@ export default function DeploymentDetailsAWS() {
                                         {editingRow.type === 'api_gateway' && editingRow.index === index ? (
                                             <>
                                                 <td><Form.Control type="text" name="api_gateway_name" value={newEntry.api_gateway_name || ''} onChange={handleChange} /></td>
+                                                <td>
+                                                    <Form.Control as="select" name="application" value={newEntry.application || ''} onChange={handleChange}>
+                                                        <option value="">Select Application</option>
+                                                        <option value="Telesales">Telesales</option>
+                                                        <option value="Clinical">Clinical</option>
+                                                        <option value="GC ELV">GC ELV</option>
+                                                        <option value="GC Carelon">GC Carelon</option>
+                                                        <option value="CCVR Blue ELV - DVA">CCVR Blue ELV - DVA</option>
+                                                        <option value="CCVR Green ELV - DVA">CCVR Green ELV - DVA</option>
+                                                        <option value="CCVR Blue ELV">CCVR Blue ELV</option>
+                                                        <option value="CCVR Green ELV">CCVR Green ELV</option>
+                                                        <option value="CCVR Blue Carelon">CCVR Blue Carelon</option>
+                                                        <option value="CCVR Green Carelon">CCVR Green Carelon</option>
+                                                    </Form.Control>
+                                                </td>
                                                 <td><Form.Control type="text" name="route" value={newEntry.route || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="method" value={newEntry.method || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="authorization" value={newEntry.authorization || ''} onChange={handleChange} /></td>
@@ -521,6 +546,7 @@ export default function DeploymentDetailsAWS() {
                                         ) : (
                                             <>
                                                 <td>{api.api_gateway_name}</td>
+                                                <td>{api.application}</td>
                                                 <td>{api.route}</td>
                                                 <td>{api.method}</td>
                                                 <td>{api.authorization}</td>
@@ -555,6 +581,21 @@ export default function DeploymentDetailsAWS() {
                                 {editingRow.type === 'api_gateway' && editingRow.index === data.api_gateway.length && (
                                     <tr>
                                         <td><Form.Control type="text" name="api_gateway_name" value={newEntry.api_gateway_name || ''} onChange={handleChange} /></td>
+                                        <td>
+                                            <Form.Control as="select" name="application" value={newEntry.application || ''} onChange={handleChange}>
+                                                <option value="">Select Application</option>
+                                                <option value="Telesales">Telesales</option>
+                                                <option value="Clinical">Clinical</option>
+                                                <option value="GC ELV">GC ELV</option>
+                                                <option value="GC Carelon">GC Carelon</option>
+                                                <option value="CCVR Blue ELV - DVA">CCVR Blue ELV - DVA</option>
+                                                <option value="CCVR Green ELV - DVA">CCVR Green ELV - DVA</option>
+                                                <option value="CCVR Blue ELV">CCVR Blue ELV</option>
+                                                <option value="CCVR Green ELV">CCVR Green ELV</option>
+                                                <option value="CCVR Blue Carelon">CCVR Blue Carelon</option>
+                                                <option value="CCVR Green Carelon">CCVR Green Carelon</option>
+                                            </Form.Control>
+                                        </td>
                                         <td><Form.Control type="text" name="route" value={newEntry.route || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="method" value={newEntry.method || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="authorization" value={newEntry.authorization || ''} onChange={handleChange} /></td>
@@ -594,6 +635,7 @@ export default function DeploymentDetailsAWS() {
                             <thead className="bg-primary text-white">
                                 <tr>
                                     <th>Script Path</th>
+                                    <th>Application</th>
                                     <th>Scrum Team</th>
                                     <th>Owner</th>
                                     <th>Region</th>
@@ -607,6 +649,21 @@ export default function DeploymentDetailsAWS() {
                                         {editingRow.type === 'dynamo_db_script' && editingRow.index === index ? (
                                             <>
                                                 <td><Form.Control type="text" name="script_path" value={newEntry.script_path || ''} onChange={handleChange} /></td>
+                                                <td>
+                                                    <Form.Control as="select" name="application" value={newEntry.application || ''} onChange={handleChange}>
+                                                        <option value="">Select Application</option>
+                                                        <option value="Telesales">Telesales</option>
+                                                        <option value="Clinical">Clinical</option>
+                                                        <option value="GC ELV">GC ELV</option>
+                                                        <option value="GC Carelon">GC Carelon</option>
+                                                        <option value="CCVR Blue ELV - DVA">CCVR Blue ELV - DVA</option>
+                                                        <option value="CCVR Green ELV - DVA">CCVR Green ELV - DVA</option>
+                                                        <option value="CCVR Blue ELV">CCVR Blue ELV</option>
+                                                        <option value="CCVR Green ELV">CCVR Green ELV</option>
+                                                        <option value="CCVR Blue Carelon">CCVR Blue Carelon</option>
+                                                        <option value="CCVR Green Carelon">CCVR Green Carelon</option>
+                                                    </Form.Control>
+                                                </td>
                                                 <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="owner" value={newEntry.owner || userName} onChange={handleChange} /></td>
                                                 <td>
@@ -624,6 +681,7 @@ export default function DeploymentDetailsAWS() {
                                         ) : (
                                             <>
                                                 <td>{entry.script_path}</td>
+                                                <td>{entry.application}</td>
                                                 <td>{entry.scrum_team}</td>
                                                 <td>{entry.owner}</td>
                                                 <td>{entry.region}</td>
@@ -654,6 +712,21 @@ export default function DeploymentDetailsAWS() {
                                 {editingRow.type === 'dynamo_db_script' && editingRow.index === data.dynamo_db_script.length && (
                                     <tr>
                                         <td><Form.Control type="text" name="script_path" value={newEntry.script_path || ''} onChange={handleChange} /></td>
+                                        <td>
+                                            <Form.Control as="select" name="application" value={newEntry.application || ''} onChange={handleChange}>
+                                                <option value="">Select Application</option>
+                                                <option value="Telesales">Telesales</option>
+                                                <option value="Clinical">Clinical</option>
+                                                <option value="GC ELV">GC ELV</option>
+                                                <option value="GC Carelon">GC Carelon</option>
+                                                <option value="CCVR Blue ELV - DVA">CCVR Blue ELV - DVA</option>
+                                                <option value="CCVR Green ELV - DVA">CCVR Green ELV - DVA</option>
+                                                <option value="CCVR Blue ELV">CCVR Blue ELV</option>
+                                                <option value="CCVR Green ELV">CCVR Green ELV</option>
+                                                <option value="CCVR Blue Carelon">CCVR Blue Carelon</option>
+                                                <option value="CCVR Green Carelon">CCVR Green Carelon</option>
+                                            </Form.Control>
+                                        </td>
                                         <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="owner" value={newEntry.owner || userName} onChange={handleChange} /></td>
                                         <td>
@@ -706,21 +779,7 @@ export default function DeploymentDetailsAWS() {
                                         {editingRow.type === 'ui' && editingRow.index === index ? (
                                             <>
                                                 <td><Form.Control type="text" name="name" value={newEntry.name || ''} onChange={handleChange} /></td>
-                                                <td>
-                                                    <Form.Control as="select" name="application" value={newEntry.application || ''} onChange={handleChange}>
-                                                        <option value="">Select Application</option>
-                                                        <option value="Telesales">Telesales</option>
-                                                        <option value="Clinical">Clinical</option>
-                                                        <option value="GC ELV">GC ELV</option>
-                                                        <option value="GC Carelon">GC Carelon</option>
-                                                        <option value="CCVR Blue ELV - DVA">CCVR Blue ELV - DVA</option>
-                                                        <option value="CCVR Green ELV - DVA">CCVR Green ELV - DVA</option>
-                                                        <option value="CCVR Blue ELV">CCVR Blue ELV</option>
-                                                        <option value="CCVR Green ELV">CCVR Green ELV</option>
-                                                        <option value="CCVR Blue Carelon">CCVR Blue Carelon</option>
-                                                        <option value="CCVR Green Carelon">CCVR Green Carelon</option>
-                                                    </Form.Control>
-                                                </td>
+
                                                 <td><Form.Control type="text" name="owner" value={newEntry.owner || userName} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="bitbucket_repo" value={newEntry.bitbucket_repo || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="branch" value={newEntry.branch || ''} onChange={handleChange} /></td>
@@ -828,6 +887,7 @@ export default function DeploymentDetailsAWS() {
                             <thead className="bg-primary text-white">
                                 <tr>
                                     <th>EB Name (Bus)</th>
+                                    <th>Application</th>
                                     <th>Rule Name</th>
                                     <th>Type</th>
                                     <th>Event Pattern</th>
@@ -842,6 +902,21 @@ export default function DeploymentDetailsAWS() {
                                         {editingRow.type === 'event_bridge' && editingRow.index === index ? (
                                             <>
                                                 <td><Form.Control type="text" name="eb_name" value={newEntry.eb_name || ''} onChange={handleChange} /></td>
+                                                <td>
+                                                    <Form.Control as="select" name="application" value={newEntry.application || ''} onChange={handleChange}>
+                                                        <option value="">Select Application</option>
+                                                        <option value="Telesales">Telesales</option>
+                                                        <option value="Clinical">Clinical</option>
+                                                        <option value="GC ELV">GC ELV</option>
+                                                        <option value="GC Carelon">GC Carelon</option>
+                                                        <option value="CCVR Blue ELV - DVA">CCVR Blue ELV - DVA</option>
+                                                        <option value="CCVR Green ELV - DVA">CCVR Green ELV - DVA</option>
+                                                        <option value="CCVR Blue ELV">CCVR Blue ELV</option>
+                                                        <option value="CCVR Green ELV">CCVR Green ELV</option>
+                                                        <option value="CCVR Blue Carelon">CCVR Blue Carelon</option>
+                                                        <option value="CCVR Green Carelon">CCVR Green Carelon</option>
+                                                    </Form.Control>
+                                                </td>
                                                 <td><Form.Control type="text" name="rule_name" value={newEntry.rule_name || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="type" value={newEntry.type || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="event_pattern" value={newEntry.event_pattern || ''} onChange={handleChange} /></td>
@@ -860,6 +935,7 @@ export default function DeploymentDetailsAWS() {
                                         ) : (
                                             <>
                                                 <td>{eb.eb_name}</td>
+                                                <td>{eb.application}</td>
                                                 <td>{eb.rule_name}</td>
                                                 <td>{eb.type}</td>
                                                 <td>{eb.event_pattern}</td>
@@ -891,6 +967,21 @@ export default function DeploymentDetailsAWS() {
                                 {editingRow.type === 'event_bridge' && editingRow.index === data.event_bridge.length && (
                                     <tr>
                                         <td><Form.Control type="text" name="eb_name" value={newEntry.eb_name || ''} onChange={handleChange} /></td>
+                                        <td>
+                                            <Form.Control as="select" name="application" value={newEntry.application || ''} onChange={handleChange}>
+                                                <option value="">Select Application</option>
+                                                <option value="Telesales">Telesales</option>
+                                                <option value="Clinical">Clinical</option>
+                                                <option value="GC ELV">GC ELV</option>
+                                                <option value="GC Carelon">GC Carelon</option>
+                                                <option value="CCVR Blue ELV - DVA">CCVR Blue ELV - DVA</option>
+                                                <option value="CCVR Green ELV - DVA">CCVR Green ELV - DVA</option>
+                                                <option value="CCVR Blue ELV">CCVR Blue ELV</option>
+                                                <option value="CCVR Green ELV">CCVR Green ELV</option>
+                                                <option value="CCVR Blue Carelon">CCVR Blue Carelon</option>
+                                                <option value="CCVR Green Carelon">CCVR Green Carelon</option>
+                                            </Form.Control>
+                                        </td>
                                         <td><Form.Control type="text" name="rule_name" value={newEntry.rule_name || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="type" value={newEntry.type || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="event_pattern" value={newEntry.event_pattern || ''} onChange={handleChange} /></td>
@@ -1312,6 +1403,7 @@ export default function DeploymentDetailsAWS() {
                             <thead className="bg-primary text-white">
                                 <tr>
                                     <th>Item Name</th>
+                                    <th>Application</th>
                                     <th>Owner</th>
                                     <th>Scrum Team</th>
                                     <th>Details</th>
@@ -1326,6 +1418,21 @@ export default function DeploymentDetailsAWS() {
                                         {editingRow.type === 'misc' && editingRow.index === index ? (
                                             <>
                                                 <td><Form.Control type="text" name="item_name" value={newEntry.item_name || ''} onChange={handleChange} /></td>
+                                                <td>
+                                                    <Form.Control as="select" name="application" value={newEntry.application || ''} onChange={handleChange}>
+                                                        <option value="">Select Application</option>
+                                                        <option value="Telesales">Telesales</option>
+                                                        <option value="Clinical">Clinical</option>
+                                                        <option value="GC ELV">GC ELV</option>
+                                                        <option value="GC Carelon">GC Carelon</option>
+                                                        <option value="CCVR Blue ELV - DVA">CCVR Blue ELV - DVA</option>
+                                                        <option value="CCVR Green ELV - DVA">CCVR Green ELV - DVA</option>
+                                                        <option value="CCVR Blue ELV">CCVR Blue ELV</option>
+                                                        <option value="CCVR Green ELV">CCVR Green ELV</option>
+                                                        <option value="CCVR Blue Carelon">CCVR Blue Carelon</option>
+                                                        <option value="CCVR Green Carelon">CCVR Green Carelon</option>
+                                                    </Form.Control>
+                                                </td>
                                                 <td><Form.Control type="text" name="owner" value={newEntry.owner || userName} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
                                                 <td><Form.Control type="text" name="details" value={newEntry.details || ''} onChange={handleChange} /></td>
@@ -1344,6 +1451,7 @@ export default function DeploymentDetailsAWS() {
                                         ) : (
                                             <>
                                                 <td>{item.item_name}</td>
+                                                <td>{item.application}</td>
                                                 <td>{item.owner}</td>
                                                 <td>{item.scrum_team}</td>
                                                 <td>{item.details}</td>
@@ -1375,6 +1483,21 @@ export default function DeploymentDetailsAWS() {
                                 {editingRow.type === 'misc' && editingRow.index === data.misc.length && (
                                     <tr>
                                         <td><Form.Control type="text" name="item_name" value={newEntry.item_name || ''} onChange={handleChange} /></td>
+                                        <td>
+                                            <Form.Control as="select" name="application" value={newEntry.application || ''} onChange={handleChange}>
+                                                <option value="">Select Application</option>
+                                                <option value="Telesales">Telesales</option>
+                                                <option value="Clinical">Clinical</option>
+                                                <option value="GC ELV">GC ELV</option>
+                                                <option value="GC Carelon">GC Carelon</option>
+                                                <option value="CCVR Blue ELV - DVA">CCVR Blue ELV - DVA</option>
+                                                <option value="CCVR Green ELV - DVA">CCVR Green ELV - DVA</option>
+                                                <option value="CCVR Blue ELV">CCVR Blue ELV</option>
+                                                <option value="CCVR Green ELV">CCVR Green ELV</option>
+                                                <option value="CCVR Blue Carelon">CCVR Blue Carelon</option>
+                                                <option value="CCVR Green Carelon">CCVR Green Carelon</option>
+                                            </Form.Control>
+                                        </td>
                                         <td><Form.Control type="text" name="owner" value={newEntry.owner || userName} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="scrum_team" value={newEntry.scrum_team || ''} onChange={handleChange} /></td>
                                         <td><Form.Control type="text" name="details" value={newEntry.details || ''} onChange={handleChange} /></td>
